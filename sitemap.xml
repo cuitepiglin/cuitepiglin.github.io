@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
+
+<url>
+  <loc>https://blog.piglin.eu.org/</loc>
+  <lastmod>2025-07-10T17:10:53+00:00</lastmod>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>https://blog.piglin.eu.org/archives</loc>
+  <lastmod>2025-07-10T17:10:53+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://blog.piglin.eu.org/about</loc>
+  <lastmod>2025-07-10T17:10:53+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://blog.piglin.eu.org/friend</loc>
+  <lastmod>2025-07-10T17:10:53+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://blog.piglin.eu.org/2025/07/10/%E9%81%93%E5%AE%A2%E5%B7%B4%E5%B7%B4%E7%A0%B4%E8%A7%A3%E8%AE%B0%E5%BD%95/</loc>
+  <lastmod>2025-07-10T17:10:53+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://blog.piglin.eu.org/2025/07/10/%E5%85%B3%E4%BA%8E%E8%AF%A5-Blog/</loc>
+  <lastmod>2025-07-10T17:10:53+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://blog.piglin.eu.org/1970/01/01/hello-world/</loc>
+  <lastmod>2025-07-10T17:10:53+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://blog.piglin.eu.org/archives/2025</loc>
+  <lastmod>2025-07-10T17:10:53+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://blog.piglin.eu.org/archives/1970</loc>
+  <lastmod>2025-07-10T17:10:53+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+
+
+</urlset>
