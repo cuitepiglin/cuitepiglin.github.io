@@ -22,10 +22,6 @@
     Cuite_Piglin&#39;s Blog | 可受的猪灵の博客
   </title>
   <!-- Website description -->
-  
-  <meta name="description" content="道客巴巴破解记录" />
-  
-
   <!-- Website keywords -->
   
   <meta name="keywords" content="破解,doc88,道客巴巴,道客巴巴提取,免费下载,道客巴巴下载" />
@@ -64,7 +60,7 @@
 <meta property="og:image" content="https://edge.piglin.eu.org/seewo-school/uwixiuyyhhqpnhlwhuhnmwvlzuphihhh">
 <meta property="og:image" content="https://edge.piglin.eu.org/seewo-school/uwixizikhhqpnhlwhuhounqkpvphihhh">
 <meta property="article:published_time" content="2025-07-10T08:53:21.000Z">
-<meta property="article:modified_time" content="2025-07-13T19:18:17.431Z">
+<meta property="article:modified_time" content="2025-07-14T04:42:54.771Z">
 <meta property="article:author" content="Cuite Piglin">
 <meta property="article:tag" content="Blog">
 <meta property="article:tag" content="博客">
@@ -516,8 +512,8 @@
 <p>道客巴巴提供了一个任务池的东西，可以把提出任务让别人寻找这个文档，别人发的文件虽然可以预览，但是只有1页</p>
 <p>然后把预览网址贴到我的程序，兼容性很强，直接完美提取</p>
 <p>再来试试别的，诶好像不对，pageCount的数字怎么和pageInfo的数量对不上，哦原来是对于分层文档，每个头文件的第一页都被解析了，通过这个这可以解析出那些原本看不到的文档了</p>
-<p>但是只能解析每页的第一页，那么如何强制解析额外页面呢？</p>
-<p>所以我试了下修改获取文件的长度，从0到102400，可以下载，但是内容包含多个连续文件（从0开始的PH到这层的最后一页或者达到长度要求）</p>
+<p>但是只能解析每层的第一页，那么如何强制解析额外页面呢？</p>
+<p>所以我试了下修改获取文件的长度，从0到1024000，可以下载，但是内容包含多个连续文件（从0开始的PH到这层的最后一页或者达到长度要求）</p>
 <p>既然可以获取额外数据，那如何分离呢？</p>
 <p>zlib压缩数据的文件头是固定的，所以只要得到第一个文件的文件头，就能通过查找文件头的方式分离</p>
 <p>但是没有这么简单，文件头数据只有两字节，极有可能找到错误位置，好在数据尾部有4字节的校验，可以直接用zlib做解压测试，只要解压成功就直接合成出页面</p>
@@ -828,7 +824,7 @@
           description: "",
           stripContent: "道客巴巴破解记录起因中考后想提取试卷，发现道客巴巴的资源较多，并且可以直接看文档，然而这个网站下载文档要付费，即使是预览文档也被特殊方式加密。 试着在网上查找相关工具，发现大多数都是提取图片，顶多利用稻壳阅读器解锁打印功能把文档提取下来，于是我开始自己研究 尝试提取文件首先肯定是抓包了，发现在滚动时会不断地出现这些文件，说明是我们要的文档数据文件： 看起来文件名像base64，但解码不出来 文件内容好像也没有特征 再看看js文件，从中找出了生成链接的代码：  很明显链接的一部分经过了某种方式加密",
           date: "Thu Jul 10 2025 16:53:21 GMT+0800",
-          updated: "Mon Jul 14 2025 03:18:17 GMT+0800",
+          updated: "Mon Jul 14 2025 12:42:54 GMT+0800",
           cover: "/images/banner.webp",
         };
       </script>
