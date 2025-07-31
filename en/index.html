@@ -418,7 +418,7 @@
     <div class="post-info">
       <div class="post-meta">
         <span><span class="icon-calendar"></span>2025-07-10</span>
-        <span><span class="icon-pencil"></span>3.5k words</span>
+        <span><span class="icon-pencil"></span>3.6k words</span>
         <span><span class="icon-clock"></span>12 mins</span>
       </div>
       <h2 class="post-title">道客巴巴破解记录</h2>
@@ -427,13 +427,13 @@
           道客巴巴破解记录起因中考后想提取试卷，发现道客巴巴的资源较多，并且可以直接看文档，然而这个网站下载文档要付费，即使是预览文档也被特殊方式加密。
 试着在网上查找相关工具，发现大多数都是提取图片，顶多利用稻壳阅读器解锁打印功能把文档提取下来，于是我开始自己研究
 尝试提取文件首先肯定是抓包了，发现在滚动时会不断地出现这些文件，说明是我们要的文档数据文件：
-看起来文件名像base64，但解码不出来
+看起来文件名像 base64 ，但解码不出来
 文件内容好像也没有特征
-再看看js文件，从中找出了生成链接的代码：
+再看看 js 文件，从中找出了生成链接的代码：
 
 很明显链接的一部分经过了某种方式加密，循着这个加密函数，从中找到了像是密钥的东西：
 
-很像base64的码表，查找资料后发现这就是bas
+很像 base64 的码表，查找资料后发现
         
       </article>
     </div>
