@@ -40,18 +40,23 @@
 
   
   
-    <meta name="description" content="如何使用肉眼读取一张二维码前提格式信息组成由15位组成1-2位为纠错等级：    等级 二进制    Low 01   Medium 00   Quartile 11   High 10   3-5位为掩码信息：    掩码模式 计算公式    000 1   001 2   010 3   011 4   100 5   101 6   110 7   111 8   6-15位为纠错信息，用不">
+    <meta name="description" content="如何使用肉眼读取一张二维码前提一张二维码的基本结构可为如下图其中红色部分为定位图案，绿色区为保留空间，橙色部分为时序图案，始终是黑白相间的，蓝色部分为格式信息，左上角一个和左下角半个与右上角半个，这两个表达的信息是相同的 格式信息组成由15位组成1-2位为纠错等级：    等级 二进制    Low 01   Medium 00   Quartile 11   High 10   3-5位为掩码信">
 <meta property="og:type" content="article">
 <meta property="og:title" content="人形扫码器 - 如何用肉眼读取一张二维码（高阶版）">
 <meta property="og:url" content="https://blog.piglin.eu.org/en/2025/08/06/eyes-qrcode/index.html">
 <meta property="og:site_name" content="Cuite_Piglin&#39;s Blog | 可受的猪灵の博客">
-<meta property="og:description" content="如何使用肉眼读取一张二维码前提格式信息组成由15位组成1-2位为纠错等级：    等级 二进制    Low 01   Medium 00   Quartile 11   High 10   3-5位为掩码信息：    掩码模式 计算公式    000 1   001 2   010 3   011 4   100 5   101 6   110 7   111 8   6-15位为纠错信息，用不">
+<meta property="og:description" content="如何使用肉眼读取一张二维码前提一张二维码的基本结构可为如下图其中红色部分为定位图案，绿色区为保留空间，橙色部分为时序图案，始终是黑白相间的，蓝色部分为格式信息，左上角一个和左下角半个与右上角半个，这两个表达的信息是相同的 格式信息组成由15位组成1-2位为纠错等级：    等级 二进制    Low 01   Medium 00   Quartile 11   High 10   3-5位为掩码信">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.piglin.eu.org/images/svg3.svg">
+<meta property="og:image" content="https://blog.piglin.eu.org/images/svg2.svg">
+<meta property="og:image" content="https://blog.piglin.eu.org/images/svg1.svg">
+<meta property="og:image" content="https://blog.piglin.eu.org/images/pixil-frame-0.png">
 <meta property="article:published_time" content="2025-08-05T20:02:24.000Z">
-<meta property="article:modified_time" content="2025-08-05T20:04:32.717Z">
+<meta property="article:modified_time" content="2025-08-06T18:50:59.933Z">
 <meta property="article:author" content="Cuite Piglin">
 <meta property="article:tag" content="二维码, 二维码识别, 二维码解析">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.piglin.eu.org/images/svg3.svg">
   
   
     <link rel="alternate" href="/atom.xml" title="Cuite_Piglin's Blog | 可受的猪灵の博客" type="application/atom+xml">
@@ -285,7 +290,7 @@
   <h3 class="toc-title">Contents</h3>
   <div class="sidebar-toc-wrapper toc-div-class" >
       
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%E8%82%89%E7%9C%BC%E8%AF%BB%E5%8F%96%E4%B8%80%E5%BC%A0%E4%BA%8C%E7%BB%B4%E7%A0%81"><span class="toc-number">1.</span> <span class="toc-text">如何使用肉眼读取一张二维码</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E6%8F%90"><span class="toc-number">1.1.</span> <span class="toc-text">前提</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%BC%E5%BC%8F%E4%BF%A1%E6%81%AF"><span class="toc-number">1.2.</span> <span class="toc-text">格式信息</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E6%88%90"><span class="toc-number">1.2.1.</span> <span class="toc-text">组成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E8%B7%B5"><span class="toc-number">1.2.2.</span> <span class="toc-text">实践</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E7%A0%81%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.3.</span> <span class="toc-text">编码模式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E6%88%90-1"><span class="toc-number">1.3.1.</span> <span class="toc-text">组成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96"><span class="toc-number">1.3.2.</span> <span class="toc-text">读取</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E8%B7%B5-1"><span class="toc-number">1.3.3.</span> <span class="toc-text">实践</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A3%E6%96%87%E9%95%BF%E5%BA%A6"><span class="toc-number">1.4.</span> <span class="toc-text">正文长度</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E6%88%90-2"><span class="toc-number">1.4.1.</span> <span class="toc-text">组成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E8%B7%B5-2"><span class="toc-number">1.4.2.</span> <span class="toc-text">实践</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A3%E6%96%87%E9%83%A8%E5%88%86"><span class="toc-number">1.5.</span> <span class="toc-text">正文部分</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-bit%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.5.1.</span> <span class="toc-text">8-bit模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96-1"><span class="toc-number">1.5.2.</span> <span class="toc-text">读取</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E8%B7%B5-3"><span class="toc-number">1.5.3.</span> <span class="toc-text">实践</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%BA%A4%E7%BB%87"><span class="toc-number">1.6.</span> <span class="toc-text">数据交织</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E7%82%B9"><span class="toc-number">1.6.1.</span> <span class="toc-text">特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E4%BA%A4%E5%8F%89"><span class="toc-number">1.6.2.</span> <span class="toc-text">解交叉</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%88%E6%9C%AC-10-%E8%A7%A3%E7%A0%81%E6%AD%A5%E9%AA%A4%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.7.</span> <span class="toc-text">版本 10 解码步骤示例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%AF%BB%E6%A0%BC%E5%BC%8F%E4%BF%A1%E6%81%AF"><span class="toc-number">1.7.1.</span> <span class="toc-text">1. 读格式信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%AF%BB%E6%95%B0%E6%8D%AE%E5%8C%BA"><span class="toc-number">1.7.2.</span> <span class="toc-text">2. 读数据区</span></a></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%E8%82%89%E7%9C%BC%E8%AF%BB%E5%8F%96%E4%B8%80%E5%BC%A0%E4%BA%8C%E7%BB%B4%E7%A0%81"><span class="toc-number">1.</span> <span class="toc-text">如何使用肉眼读取一张二维码</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E6%8F%90"><span class="toc-number">1.1.</span> <span class="toc-text">前提</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%BC%E5%BC%8F%E4%BF%A1%E6%81%AF"><span class="toc-number">1.2.</span> <span class="toc-text">格式信息</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E6%88%90"><span class="toc-number">1.2.1.</span> <span class="toc-text">组成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96"><span class="toc-number">1.2.2.</span> <span class="toc-text">读取</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E8%B7%B5"><span class="toc-number">1.2.3.</span> <span class="toc-text">实践</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96%E6%96%B9%E5%BC%8F"><span class="toc-number">1.3.</span> <span class="toc-text">读取方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E7%A0%81%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.4.</span> <span class="toc-text">编码模式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E6%88%90-1"><span class="toc-number">1.4.1.</span> <span class="toc-text">组成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96-1"><span class="toc-number">1.4.2.</span> <span class="toc-text">读取</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E8%B7%B5-1"><span class="toc-number">1.4.3.</span> <span class="toc-text">实践</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A3%E6%96%87%E9%95%BF%E5%BA%A6"><span class="toc-number">1.5.</span> <span class="toc-text">正文长度</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E6%88%90-2"><span class="toc-number">1.5.1.</span> <span class="toc-text">组成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E8%B7%B5-2"><span class="toc-number">1.5.2.</span> <span class="toc-text">实践</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A3%E6%96%87%E9%83%A8%E5%88%86"><span class="toc-number">1.6.</span> <span class="toc-text">正文部分</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-bit%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.6.1.</span> <span class="toc-text">8-bit模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96-2"><span class="toc-number">1.6.2.</span> <span class="toc-text">读取</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E8%B7%B5-3"><span class="toc-number">1.6.3.</span> <span class="toc-text">实践</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%BA%A4%E7%BB%87"><span class="toc-number">1.7.</span> <span class="toc-text">数据交织</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E7%82%B9"><span class="toc-number">1.7.1.</span> <span class="toc-text">特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E4%BA%A4%E5%8F%89"><span class="toc-number">1.7.2.</span> <span class="toc-text">解交叉</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%88%E6%9C%AC-10-%E8%A7%A3%E7%A0%81%E6%AD%A5%E9%AA%A4%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.8.</span> <span class="toc-text">版本 10 解码步骤示例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%AF%BB%E6%A0%BC%E5%BC%8F%E4%BF%A1%E6%81%AF"><span class="toc-number">1.8.1.</span> <span class="toc-text">1. 读格式信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%AF%BB%E6%95%B0%E6%8D%AE%E5%8C%BA"><span class="toc-number">1.8.2.</span> <span class="toc-text">2. 读数据区</span></a></li></ol></li></ol></li></ol>
       
   </div>
 </div>
@@ -383,7 +388,7 @@
       <div class="article-date">
   <span class="article-date-link" data-aos="zoom-in">
     <time datetime="2025-08-05T20:02:24.000Z" itemprop="datePublished">2025-08-06</time>
-    <time style="display: none;" id="post-update-time">2025-08-06</time>
+    <time style="display: none;" id="post-update-time">2025-08-07</time>
   </span>
 </div>
 
@@ -396,7 +401,8 @@
     <div class="e-content article-entry" itemprop="articleBody">
       
       
-        <h1 id="如何使用肉眼读取一张二维码"><a href="#如何使用肉眼读取一张二维码" class="headerlink" title="如何使用肉眼读取一张二维码"></a>如何使用肉眼读取一张二维码</h1><h2 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h2><h2 id="格式信息"><a href="#格式信息" class="headerlink" title="格式信息"></a>格式信息</h2><h3 id="组成"><a href="#组成" class="headerlink" title="组成"></a>组成</h3><p>由15位组成</br><br>1-2位为纠错等级：</p>
+        <h1 id="如何使用肉眼读取一张二维码"><a href="#如何使用肉眼读取一张二维码" class="headerlink" title="如何使用肉眼读取一张二维码"></a>如何使用肉眼读取一张二维码</h1><h2 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h2><p>一张二维码的基本结构可为如下图<br><img src="/images/svg3.svg"><br>其中红色部分为定位图案，绿色区为保留空间，橙色部分为时序图案，始终是黑白相间的，蓝色部分为格式信息，左上角一个和左下角半个与右上角半个，这两个表达的信息是相同的</p>
+<h2 id="格式信息"><a href="#格式信息" class="headerlink" title="格式信息"></a>格式信息</h2><h3 id="组成"><a href="#组成" class="headerlink" title="组成"></a>组成</h3><p>由15位组成</br><br>1-2位为纠错等级：</p>
 <table>
 <thead>
 <tr>
@@ -431,41 +437,42 @@
 </thead>
 <tbody><tr>
 <td>000</td>
-<td>1</td>
+<td>(x + y) % 2</td>
 </tr>
 <tr>
 <td>001</td>
-<td>2</td>
+<td>x % 2</td>
 </tr>
 <tr>
 <td>010</td>
-<td>3</td>
+<td>y % 3</td>
 </tr>
 <tr>
 <td>011</td>
-<td>4</td>
+<td>(x + y) % 3</td>
 </tr>
 <tr>
 <td>100</td>
-<td>5</td>
+<td>(x &#x2F; 2 + y &#x2F; 3) % 2</td>
 </tr>
 <tr>
 <td>101</td>
-<td>6</td>
+<td>(x * y) % 2 + (x * y) % 3</td>
 </tr>
 <tr>
 <td>110</td>
-<td>7</td>
+<td>((x * y) % 2 + (x * y) % 3) % 2</td>
 </tr>
 <tr>
 <td>111</td>
-<td>8</td>
+<td>((x + y) % 2 + (x * y) % 3) % 2</td>
 </tr>
 </tbody></table>
 <p>6-15位为纠错信息，用不上，不读</br><br>使用101010000010010进行异或处理后即为在二维码中看到的样子</p>
-<h3 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h3><p>在左上的定位点下方的第一个块开始数，读5位，并进行异或操作：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">10101</span><br><span class="line">XOR</span><br><span class="line">10101</span><br><span class="line">-&gt;</span><br><span class="line">00000</span><br></pre></td></tr></table></figure>
-<p>对表，可知等级为M(00)，掩码为1(000)</p>
+<h3 id="读取"><a href="#读取" class="headerlink" title="读取"></a>读取</h3><p><img src="/images/svg2.svg"><br>如图橙线所框位置，从左往右读</p>
+<h3 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">10101</span><br><span class="line">XOR</span><br><span class="line">10101</span><br><span class="line">=</span><br><span class="line">00000</span><br></pre></td></tr></table></figure>
+<p>对表，可知等级为M(00)，掩码为0</p>
+<h2 id="读取方式"><a href="#读取方式" class="headerlink" title="读取方式"></a>读取方式</h2><p><img src="/images/svg1.svg"><br>如图所示，以二维码右下角为起始，沿着线读，跳过功能区域和格式信息区域，并“穿过”垂直时序图案</p>
 <h2 id="编码模式"><a href="#编码模式" class="headerlink" title="编码模式"></a>编码模式</h2><h3 id="组成-1"><a href="#组成-1" class="headerlink" title="组成"></a>组成</h3><p>4位</p>
 <table>
 <thead>
@@ -507,7 +514,7 @@
 <td>1001</td>
 </tr>
 </tbody></table>
-<h3 id="读取"><a href="#读取" class="headerlink" title="读取"></a>读取</h3><p>位于编码区的起始4个块，以Z字形倒着走</p>
+<h3 id="读取-1"><a href="#读取-1" class="headerlink" title="读取"></a>读取</h3><p>位于编码区的起始4个块</p>
 <h3 id="实践-1"><a href="#实践-1" class="headerlink" title="实践"></a>实践</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">读取：1101</span><br><span class="line">掩码：1001</span><br><span class="line">结果：0100</span><br></pre></td></tr></table></figure>
 <p>可得为8-bit模式</p>
 <h2 id="正文长度"><a href="#正文长度" class="headerlink" title="正文长度"></a>正文长度</h2><h3 id="组成-2"><a href="#组成-2" class="headerlink" title="组成"></a>组成</h3><p>在版本1-9中，为8个bit</br><br>在版本&gt;&#x3D;10中，为16个bit</p>
@@ -515,7 +522,7 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">读取：10011111</span><br><span class="line">掩码：10011001</span><br><span class="line">结果：00000110</span><br><span class="line">长度：6</span><br></pre></td></tr></table></figure>
 
 <h2 id="正文部分"><a href="#正文部分" class="headerlink" title="正文部分"></a>正文部分</h2><h3 id="8-bit模式"><a href="#8-bit模式" class="headerlink" title="8-bit模式"></a>8-bit模式</h3><p>顾名思义，8个bit为一个字节</p>
-<h3 id="读取-1"><a href="#读取-1" class="headerlink" title="读取"></a>读取</h3><p>以版本1-9为例，<br>跳过编码模式以及正文长度后的12个块，以Z字形倒着走</p>
+<h3 id="读取-2"><a href="#读取-2" class="headerlink" title="读取"></a>读取</h3><p>以版本1-9为例，<br>跳过编码模式以及正文长度后的12个块，以Z字形倒着走</p>
 <h3 id="实践-3"><a href="#实践-3" class="headerlink" title="实践"></a>实践</h3><p>读取：11111000<br>掩码：10011001<br>结果：01100001<br>解码：a</p>
 <h2 id="数据交织"><a href="#数据交织" class="headerlink" title="数据交织"></a>数据交织</h2><h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><p>对于较长的数据，会被分成相同长度的几个块，这时交织特性会体现出来，即数据被分为多个相同长度的块，然后将各个块的数据交叉在一起<br><br>假如一个字符串被分为两个块的内容如下：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">块1：ABCDEFG...</span><br><span class="line">块2：abcdefg...</span><br></pre></td></tr></table></figure>
@@ -531,21 +538,21 @@
 <p>拼接：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hello World!</span><br></pre></td></tr></table></figure>
 
-<h2 id="版本-10-解码步骤示例"><a href="#版本-10-解码步骤示例" class="headerlink" title="版本 10 解码步骤示例"></a>版本 10 解码步骤示例</h2><h3 id="1-读格式信息"><a href="#1-读格式信息" class="headerlink" title="1. 读格式信息"></a>1. 读格式信息</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">读：11101</span><br><span class="line">掩：10101</span><br><span class="line">解：01000</span><br></pre></td></tr></table></figure>
+<h2 id="版本-10-解码步骤示例"><a href="#版本-10-解码步骤示例" class="headerlink" title="版本 10 解码步骤示例"></a>版本 10 解码步骤示例</h2><p><img src="/images/pixil-frame-0.png"><br>临时图片，里面的各个区块是随便放置的</p>
+<h3 id="1-读格式信息"><a href="#1-读格式信息" class="headerlink" title="1. 读格式信息"></a>1. 读格式信息</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">读：11101</span><br><span class="line">掩：10101</span><br><span class="line">解：01000</span><br></pre></td></tr></table></figure>
 <p>可得纠错等级为01(L)，掩码为000(第一种)（当然我故意这么设置的，不然掩码计算会复杂一些）</p>
-<h3 id="2-读数据区"><a href="#2-读数据区" class="headerlink" title="2. 读数据区"></a>2. 读数据区</h3><p>掩码0很简单，直接用1001异或就行，<br>但是重点来了，我们不能直接读4个bit，而是每8个bit读，即读一个字节</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">读：11011001</span><br><span class="line">掩：10011001</span><br><span class="line">解：01000000</span><br></pre></td></tr></table></figure>
-<p>可得编码模式为0100(8-bit)，和长度信息的一部分(0000)</p>
-<p>跳过三个块</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">读：10010110</span><br><span class="line">掩：10011001</span><br><span class="line">解：00001111</span><br></pre></td></tr></table></figure>
-<p>可得长度信息一部分(00001111)</p>
-<p>跳过三个块</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">读：01001111</span><br><span class="line">掩：10011001</span><br><span class="line">解：11010110</span><br></pre></td></tr></table></figure>
-<p>可得长度信息的最后一部分(1101)，拼接得</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0000 0000 1111 1101</span><br></pre></td></tr></table></figure>
-<p>得出长度为 16*15+8+4+1&#x3D;253</p>
-<p>并得到第一个字符的半个字节(0110)</p>
-<p>依次类推</p>
+<h3 id="2-读数据区"><a href="#2-读数据区" class="headerlink" title="2. 读数据区"></a>2. 读数据区</h3><p>掩码0很简单，直接用1001异或就行，<br><br>但是重点来了，我们不能直接读4个bit，而是每8个bit读，即读一个字节<br><br>为了方便解交织，我们一次读4个字节</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">读：11011001 10111111 10001111 10101111</span><br><span class="line">掩：10011001 10011001 10011001 10011001</span><br><span class="line">解：01000000 00100110 00010110 00110110</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">读：10010110 10101111 01111101 10001110</span><br><span class="line">掩：10011001 10011001 10011001 10011001</span><br><span class="line">解：00001111 00110110 11100100 00010111</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">读：01001111 01101111 00001110 00001100</span><br><span class="line">掩：10011001 10011001 10011001 10011001</span><br><span class="line">解：11010110 11110110 10010111 10010101</span><br></pre></td></tr></table></figure>
+<p>遇到格式信息了，要避开，直接拐弯<br><br>此时掩码也要跟着变(0110)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">读：11100001 00100000 01010000 00010000</span><br><span class="line">掩：01100110 01100110 01100110 01100110</span><br><span class="line">解：10000111 01000110 00110110 01110110</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">读：00100001 00110000 01110001 11100000</span><br><span class="line">掩：01100110 01100110 01100110 01100110</span><br><span class="line">解：01000111 01010110 00010111 10000110</span><br></pre></td></tr></table></figure>
+<p>解交织</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">块1：0100 00000000 11111101 01101000 01110100 0111</span><br><span class="line">块2：0010 01100011 01101111 01100100 01100101 0110(这样分割是因为编码模式只占4bit，而交织是以8bit为单位的，因此需要移位)</span><br></pre></td></tr></table></figure>
+<p>可得编码模式为0100(8-bit)，和长度信息16*15+8+4+1&#x3D;253(0000000011111101)<br><br>以及块1的一个字符”ht”，块2的三个字符”code”</p>
+<p>依次类推，就能得出完整的网址了</p>
+<p>剩下的数据留给你们读，快去评论区发布你的成果吧（</p>
 <p>更新中…</p>
 
       
@@ -653,10 +660,10 @@
     
       <div>
         <span class="icon-brush"></span>
-        4.5k
+        4.8k
         &nbsp;|&nbsp;
         <span class="icon-coffee"></span>
-        00:15
+        00:17
       </div>
     
     
@@ -689,7 +696,7 @@
   <h3 class="toc-title">Contents</h3>
   <div class="sidebar-toc-wrapper toc-div-class" >
       
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%E8%82%89%E7%9C%BC%E8%AF%BB%E5%8F%96%E4%B8%80%E5%BC%A0%E4%BA%8C%E7%BB%B4%E7%A0%81"><span class="toc-number">1.</span> <span class="toc-text">如何使用肉眼读取一张二维码</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E6%8F%90"><span class="toc-number">1.1.</span> <span class="toc-text">前提</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%BC%E5%BC%8F%E4%BF%A1%E6%81%AF"><span class="toc-number">1.2.</span> <span class="toc-text">格式信息</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E6%88%90"><span class="toc-number">1.2.1.</span> <span class="toc-text">组成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E8%B7%B5"><span class="toc-number">1.2.2.</span> <span class="toc-text">实践</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E7%A0%81%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.3.</span> <span class="toc-text">编码模式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E6%88%90-1"><span class="toc-number">1.3.1.</span> <span class="toc-text">组成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96"><span class="toc-number">1.3.2.</span> <span class="toc-text">读取</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E8%B7%B5-1"><span class="toc-number">1.3.3.</span> <span class="toc-text">实践</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A3%E6%96%87%E9%95%BF%E5%BA%A6"><span class="toc-number">1.4.</span> <span class="toc-text">正文长度</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E6%88%90-2"><span class="toc-number">1.4.1.</span> <span class="toc-text">组成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E8%B7%B5-2"><span class="toc-number">1.4.2.</span> <span class="toc-text">实践</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A3%E6%96%87%E9%83%A8%E5%88%86"><span class="toc-number">1.5.</span> <span class="toc-text">正文部分</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-bit%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.5.1.</span> <span class="toc-text">8-bit模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96-1"><span class="toc-number">1.5.2.</span> <span class="toc-text">读取</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E8%B7%B5-3"><span class="toc-number">1.5.3.</span> <span class="toc-text">实践</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%BA%A4%E7%BB%87"><span class="toc-number">1.6.</span> <span class="toc-text">数据交织</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E7%82%B9"><span class="toc-number">1.6.1.</span> <span class="toc-text">特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E4%BA%A4%E5%8F%89"><span class="toc-number">1.6.2.</span> <span class="toc-text">解交叉</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%88%E6%9C%AC-10-%E8%A7%A3%E7%A0%81%E6%AD%A5%E9%AA%A4%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.7.</span> <span class="toc-text">版本 10 解码步骤示例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%AF%BB%E6%A0%BC%E5%BC%8F%E4%BF%A1%E6%81%AF"><span class="toc-number">1.7.1.</span> <span class="toc-text">1. 读格式信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%AF%BB%E6%95%B0%E6%8D%AE%E5%8C%BA"><span class="toc-number">1.7.2.</span> <span class="toc-text">2. 读数据区</span></a></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%E8%82%89%E7%9C%BC%E8%AF%BB%E5%8F%96%E4%B8%80%E5%BC%A0%E4%BA%8C%E7%BB%B4%E7%A0%81"><span class="toc-number">1.</span> <span class="toc-text">如何使用肉眼读取一张二维码</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E6%8F%90"><span class="toc-number">1.1.</span> <span class="toc-text">前提</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%BC%E5%BC%8F%E4%BF%A1%E6%81%AF"><span class="toc-number">1.2.</span> <span class="toc-text">格式信息</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E6%88%90"><span class="toc-number">1.2.1.</span> <span class="toc-text">组成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96"><span class="toc-number">1.2.2.</span> <span class="toc-text">读取</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E8%B7%B5"><span class="toc-number">1.2.3.</span> <span class="toc-text">实践</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96%E6%96%B9%E5%BC%8F"><span class="toc-number">1.3.</span> <span class="toc-text">读取方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E7%A0%81%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.4.</span> <span class="toc-text">编码模式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E6%88%90-1"><span class="toc-number">1.4.1.</span> <span class="toc-text">组成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96-1"><span class="toc-number">1.4.2.</span> <span class="toc-text">读取</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E8%B7%B5-1"><span class="toc-number">1.4.3.</span> <span class="toc-text">实践</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A3%E6%96%87%E9%95%BF%E5%BA%A6"><span class="toc-number">1.5.</span> <span class="toc-text">正文长度</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E6%88%90-2"><span class="toc-number">1.5.1.</span> <span class="toc-text">组成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E8%B7%B5-2"><span class="toc-number">1.5.2.</span> <span class="toc-text">实践</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A3%E6%96%87%E9%83%A8%E5%88%86"><span class="toc-number">1.6.</span> <span class="toc-text">正文部分</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-bit%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.6.1.</span> <span class="toc-text">8-bit模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96-2"><span class="toc-number">1.6.2.</span> <span class="toc-text">读取</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E8%B7%B5-3"><span class="toc-number">1.6.3.</span> <span class="toc-text">实践</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%BA%A4%E7%BB%87"><span class="toc-number">1.7.</span> <span class="toc-text">数据交织</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E7%82%B9"><span class="toc-number">1.7.1.</span> <span class="toc-text">特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E4%BA%A4%E5%8F%89"><span class="toc-number">1.7.2.</span> <span class="toc-text">解交叉</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%88%E6%9C%AC-10-%E8%A7%A3%E7%A0%81%E6%AD%A5%E9%AA%A4%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.8.</span> <span class="toc-text">版本 10 解码步骤示例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%AF%BB%E6%A0%BC%E5%BC%8F%E4%BF%A1%E6%81%AF"><span class="toc-number">1.8.1.</span> <span class="toc-text">1. 读格式信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%AF%BB%E6%95%B0%E6%8D%AE%E5%8C%BA"><span class="toc-number">1.8.2.</span> <span class="toc-text">2. 读数据区</span></a></li></ol></li></ol></li></ol>
       
   </div>
 </div>
@@ -850,9 +857,9 @@
           url: "https://blog.piglin.eu.org/2025/08/06/eyes-qrcode/",
           excerpt: "",
           description: "",
-          stripContent: "如何使用肉眼读取一张二维码前提格式信息组成由15位组成1-2位为纠错等级：    等级 二进制    Low 01   Medium 00   Quartile 11   High 10   3-5位为掩码信息：    掩码模式 计算公式    000 1   001 2   010 3   011 4   100 5   101 6   110 7   111 8   6-15位为纠错信息，用不上，不读使用101010000010010进行异或处理后即为在二维码中看到的样子 实践在左上的定位点",
+          stripContent: "如何使用肉眼读取一张二维码前提一张二维码的基本结构可为如下图其中红色部分为定位图案，绿色区为保留空间，橙色部分为时序图案，始终是黑白相间的，蓝色部分为格式信息，左上角一个和左下角半个与右上角半个，这两个表达的信息是相同的 格式信息组成由15位组成1-2位为纠错等级：    等级 二进制    Low 01   Medium 00   Quartile 11   High 10   3-5位为掩码信息：    掩码模式 计算公式    000 (x + y) % 2   001 x % 2   0",
           date: "Wed Aug 06 2025 04:02:24 GMT+0800",
-          updated: "Wed Aug 06 2025 04:04:32 GMT+0800",
+          updated: "Thu Aug 07 2025 02:50:59 GMT+0800",
           cover: "/images/banner.webp",
         };
       </script>

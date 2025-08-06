@@ -381,13 +381,14 @@
     <div class="post-info">
       <div class="post-meta">
         <span><span class="icon-calendar"></span>2025-08-06</span>
-        <span><span class="icon-pencil"></span>721 words</span>
-        <span><span class="icon-clock"></span>2 mins</span>
+        <span><span class="icon-pencil"></span>1k words</span>
+        <span><span class="icon-clock"></span>4 mins</span>
       </div>
       <h2 class="post-title">人形扫码器 - 如何用肉眼读取一张二维码（高阶版）</h2>
       <article class="post-article">
         
-          如何使用肉眼读取一张二维码前提格式信息组成由15位组成1-2位为纠错等级：
+          如何使用肉眼读取一张二维码前提一张二维码的基本结构可为如下图其中红色部分为定位图案，绿色区为保留空间，橙色部分为时序图案，始终是黑白相间的，蓝色部分为格式信息，左上角一个和左下角半个与右上角半个，这两个表达的信息是相同的
+格式信息组成由15位组成1-2位为纠错等级：
 
 
 
@@ -422,40 +423,23 @@ High
 
 
 000
-1
+(x + y) % 2
 
 
 001
-2
+x % 2
 
 
 010
-3
+y % 3
 
 
 011
-4
+(x + y) % 3
 
 
 100
-5
-
-
-101
-6
-
-
-110
-7
-
-
-111
-8
-
-
-6-15位为纠错信息，用不上，不读使用101010000010010进行异或处理后即为在二维码中看到的样子
-实践在左上的定位点下方的第一个块开始数，读5位，并进行异或操作：
-1234510101XOR10101-&amp;gt;000
+(x &amp;#x2F; 2 + y &amp;
         
       </article>
     </div>
@@ -571,10 +555,10 @@ High
     
       <div>
         <span class="icon-brush"></span>
-        4.5k
+        4.8k
         &nbsp;|&nbsp;
         <span class="icon-coffee"></span>
-        00:15
+        00:17
       </div>
     
     
