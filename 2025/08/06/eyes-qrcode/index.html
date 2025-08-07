@@ -53,7 +53,7 @@
 <meta property="og:image" content="https://blog.piglin.eu.org/images/svg1.svg">
 <meta property="og:image" content="https://blog.piglin.eu.org/images/pixil-frame-0.png">
 <meta property="article:published_time" content="2025-08-05T20:02:24.000Z">
-<meta property="article:modified_time" content="2025-08-07T10:51:51.182Z">
+<meta property="article:modified_time" content="2025-08-07T13:06:29.213Z">
 <meta property="article:author" content="Cuite Piglin">
 <meta property="article:tag" content="Blog">
 <meta property="article:tag" content="博客">
@@ -525,7 +525,7 @@
 <h3 id="读取-1"><a href="#读取-1" class="headerlink" title="读取"></a>读取</h3><p>位于编码区的起始 4 个模块，按上文提到的方式读取</p>
 <h3 id="实践-1"><a href="#实践-1" class="headerlink" title="实践"></a>实践</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">读取：1101</span><br><span class="line">掩码：1001</span><br><span class="line">结果：0100</span><br></pre></td></tr></table></figure>
 <p>可得为 Byte(8-bit) 模式</p>
-<h2 id="正文长度"><a href="#正文长度" class="headerlink" title="正文长度"></a>正文长度</h2><h3 id="构成-3"><a href="#构成-3" class="headerlink" title="构成"></a>构成</h3><p>在版本1-7中，为 8 个 bit</br><br>在版本&gt;&#x3D;7中，为 16 个 bit</p>
+<h2 id="正文长度"><a href="#正文长度" class="headerlink" title="正文长度"></a>正文长度</h2><h3 id="构成-3"><a href="#构成-3" class="headerlink" title="构成"></a>构成</h3><p>与编码模式和版本大小有关，以字节编码为例<br>在版本1-7中，为 8 个 bit</br><br>在版本&gt;&#x3D;7中，为 16 个 bit</p>
 <h3 id="实践-2"><a href="#实践-2" class="headerlink" title="实践"></a>实践</h3><p>以版本 1-7 为例</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">读取：10011111</span><br><span class="line">掩码：10011001</span><br><span class="line">结果：00000110</span><br><span class="line">长度：6</span><br></pre></td></tr></table></figure>
 
@@ -790,7 +790,9 @@
 <li><a target="_blank" rel="noopener" href="https://c.biancheng.net/c/ascii/">ASCII码对照表</a>（包含英文字符的二进制表示）</li>
 <li><a target="_blank" rel="noopener" href="https://www.pixilart.com/draw#">pixilart</a>（像素画工具，可先导入一张二维码，然后在左侧找到 Crop Tool 修改图画大小为100x100，再在右侧找到加号添加一个图层，使用油漆工具填充绿色，将该图层移至二维码下方，切换至二维码图层，使用选择工具就可以自由操作了）</li>
 <li><a target="_blank" rel="noopener" href="https://github.com/nayuki/QR-Code-generator/">QR-Code-generator</a>（该仓库用多种语言制作了二维码生成器，并用注释解释代码含义，可了解二维码的编码过程）</li>
-<li><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1C2EMzZEKN">[MCBE] 二维码生成器『其三』</a>（该视频很直观地展现了二维码的生成过程）</li>
+<li>视频：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1C2EMzZEKN">[MCBE] 二维码生成器『其三』</a>（该视频很直观地展现了二维码的生成过程）</li>
+<li>视频：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV18s411P7to/?p=1&t=2116&spm_id_from=..0.0">如何手算二维码【高玩】</a>（该视频完整地展示了如何手算二维码，包括纠错码）</li>
+<li>专栏：<a target="_blank" rel="noopener" href="https://www.bilibili.com/read/cv684169/">如何手算二维码</a>（里面有很详细的表格，包括字符容量表、字符计数指示符位长表和块数量信息表等）</li>
 </ol>
 <p>未完待续，更新中…</p>
 
@@ -897,7 +899,7 @@
     
       <div>
         <span class="icon-brush"></span>
-        5.6k
+        5.7k
         &nbsp;|&nbsp;
         <span class="icon-coffee"></span>
         00:20
@@ -1096,7 +1098,7 @@
           description: "",
           stripContent: "如何使用肉眼读取一张二维码二维码概述结构以版本6为例，一张二维码的基本结构可为如下图其中红色部分为定位图案，绿色区为保留空间，橙色部分为时序图案，始终是黑白相间的，蓝色部分为格式信息，左上角一个和左下角半个与右上角半个，这两个表达的信息是相同的 版本共有 40 个版本，大小随着版本号增加而增加 格式信息构成由15位组成1-2位为纠错等级：    等级 二进制    Low 01   Medium 00   Quartile 11   High 10   3-5位为掩码信息：    掩码模式 计算",
           date: "Wed Aug 06 2025 04:02:24 GMT+0800",
-          updated: "Thu Aug 07 2025 18:51:51 GMT+0800",
+          updated: "Thu Aug 07 2025 21:06:29 GMT+0800",
           cover: "/images/banner.webp",
         };
       </script>
