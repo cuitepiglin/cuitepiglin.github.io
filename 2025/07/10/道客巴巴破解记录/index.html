@@ -60,7 +60,7 @@
 <meta property="og:image" content="https://edge.piglin.eu.org/seewo-school/uwixiuyyhhqpnhlwhuhnmwvlzuphihhh">
 <meta property="og:image" content="https://edge.piglin.eu.org/seewo-school/uwixizikhhqpnhlwhuhounqkpvphihhh">
 <meta property="article:published_time" content="2025-07-10T08:53:21.000Z">
-<meta property="article:modified_time" content="2025-11-16T05:38:41.844Z">
+<meta property="article:modified_time" content="2026-01-02T16:49:40.864Z">
 <meta property="article:author" content="Cuite Piglin">
 <meta property="article:tag" content="Blog">
 <meta property="article:tag" content="博客">
@@ -401,7 +401,7 @@
       <div class="article-date">
   <span class="article-date-link" data-aos="zoom-in">
     <time datetime="2025-07-10T08:53:21.000Z" itemprop="datePublished">2025-07-10</time>
-    <time style="display: none;" id="post-update-time">2025-11-16</time>
+    <time style="display: none;" id="post-update-time">2026-01-03</time>
   </span>
 </div>
 
@@ -433,19 +433,19 @@
 <p>前几个像是日期，然后最前面的就完全不知道是什么</p>
 <p>再仔细看看 js 文件，发现文件 id 的源头在这里：</p>
 <p><img src="https://edge.piglin.eu.org/seewo-school/uwiwhhnohhqpnhlwhuhkvixnqihhihhh"></p>
-<p>我们看一下 Config 是什么内容：</p>
+<p>我们看一下 <code>Config</code> 是什么内容：</p>
 <p><img src="https://edge.piglin.eu.org/seewo-school/uwiwhhnohhqpnhlwhuhkvkjuuuphihhh"></p>
 <p>没错，就是文档的基本信息，那个像是日期部分也都在p_swf里</p>
-<p>看起来 pageInfo 保存着文档页面的各个 id，尝试用之前剥离下来的程序解码，结果是乱码</p>
+<p>看起来 <code>pageInfo</code> 保存着文档页面的各个 id，尝试用之前剥离下来的程序解码，结果是乱码</p>
 <p>再转回来看密钥部分，发现下面还有一个差不多的密钥，我们替换一下，解码成功：</p>
 <p><img src="https://edge.piglin.eu.org/seewo-school/uwiwhhnohhqpnhlwhuhkvoziiwphihhh"></p>
 <p>答案出来了，就是在这里储存的文件有关id</p>
-<p>那么，Config 又是从哪来的呢？</p>
+<p>那么，<code>Config</code> 又是从哪来的呢？</p>
 <p>于是我在一堆 js 文件里找，发现怎么找也找不到，正当一筹莫展的时候，偶然间在网页中撇到了一长串的代码：</p>
 <p><img src="https://edge.piglin.eu.org/seewo-school/uwixiuyyhhqpnhlwhuhlzminquhhihhh"></p>
-<p>看起来 m_main.init 的内容很像是 base64，极有可能和之前的加密一样，我们直接用解工具解出来：</p>
+<p>看起来 <code>m_main.init</code> 的内容很像是 base64，极有可能和之前的加密一样，我们直接用解密工具解出来：</p>
 <p><img src="https://edge.piglin.eu.org/seewo-school/uwixiuyyhhqpnhlwhuhniukplkphihhh"></p>
-<p>没错，这就是Config的内容</p>
+<p>没错，这就是 <code>Config</code> 的内容</p>
 <p>到现在，我们就可以做出下载流程了：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">输入URL-&gt;从网页中解析配置-&gt;获取文档页数-&gt;下载头文件-&gt;下载每页的文件</span><br></pre></td></tr></table></figure>
 
@@ -462,7 +462,7 @@
 </ul>
 <p>不过总之，还是拿到了解密工具，我们运行下：</p>
 <p><img src="https://edge.piglin.eu.org/seewo-school/uwixiuyyhhqpnhlwhuhnjinnplphihhh"></p>
-<p>很明显，要先选择PK文件，对吗？提示检测到YBD头部，看起来很对，再选择PH文件，也检测到了，再让我们保存文件，就这样成功了？不对，转出来的文件没有任何内容：</p>
+<p>很明显，要先选择PK文件，对吗？提示检测到<code>YBD</code>头部，看起来很对，再选择PH文件，也检测到了，再让我们保存文件，就这样成功了？不对，转出来的文件没有任何内容：</p>
 <p><img src="https://edge.piglin.eu.org/seewo-school/uwixizikhhqpnhlwhuhnmwhuihphihhh"></p>
 <p>再换个顺序试试？</p>
 <p><img src="https://edge.piglin.eu.org/seewo-school/uwixiuyyhhqpnhlwhuhnmwvlzuphihhh"></p>
@@ -478,34 +478,34 @@
 <p>仔细看一下解密是如何进行的：先输入 PH 文件，跳过前 40 字节，用 zlib 解压，再输入 PK 文件，跳过前 32 字节，解压，将两次结果合并，得到 swf 文件</p>
 <p>所以说，这个文件实质上并没有加密，仅仅只是把一个 swf 文件分割成两部分然后分别压缩罢了</p>
 <h2 id="文件转换"><a href="#文件转换" class="headerlink" title="文件转换"></a>文件转换</h2><p>文件解密程序已经有了，其实有 flash 播放器就可以直接用了，也可以打印出高清文档，可是只能一个个打开并提取，太麻烦了，怎么自动化呢？</p>
-<p>于是我查找了一下 swf 到 pdf 的转换工具，有些是 Python 写的，然而根本不能用，再找反编译工具，发现 ffdec 本身就能把 swf 转到 pdf，于是按照帮助文档我试了下转换，结果是：转换出来的只有图片和部分形状，文字全部消失</p>
+<p>于是我查找了一下 swf 到 pdf 的转换工具，有些是 Python 写的，然而根本不能用，再找反编译工具，发现 <code>ffdec</code> 本身就能把 swf 转到 pdf，于是按照帮助文档我试了下转换，结果是：转换出来的只有图片和部分形状，文字全部消失</p>
 <p>不过帮助文档中还有个转换到 svg 的，结果出乎意料，文字形状图片全部保留，但是无法复制文字，与用 flash 导出 pdf 的一样，不过够了</p>
-<p>但是我们需要的是 pdf，于是在网上搜索 svg2pdf，很快就找到了一个名为 cairosvg 的库，利用它很快就把 pdf 给转出来了，再用 pypdf 库把文件合并为一个，一个文档就被完整地提取出来了</p>
+<p>但是我们需要的是 pdf，于是在网上搜索 svg2pdf，很快就找到了一个名为 <code>cairosvg</code> 的库，利用它很快就把 pdf 给转出来了，再用 <code>pypdf</code> 库把文件合并为一个，一个文档就被完整地提取出来了</p>
 <p>到这里似乎就已经把提取器做好了，果真如此吗？</p>
-<p>当我尝试提取另一个文档时，问题出现了：ffdec 没有转换出任何文件，没有任何提示哪里有问题</p>
-<p>然后我敏锐地察觉到应该是 swf 的头部信息有问题，用 ffdec 打开后，果然发现帧数量为 0，修改后便能正常转换</p>
+<p>当我尝试提取另一个文档时，问题出现了：<code>ffdec</code> 没有转换出任何文件，没有任何提示哪里有问题</p>
+<p>然后我敏锐地察觉到应该是 swf 的头部信息有问题，用 <code>ffdec</code> 打开后，果然发现帧数量为 0，修改后便能正常转换</p>
 <p>但是提取出来的部分文档仍有许多瑕疵，并且还有个重大 BUG，50 页以后的文档全部解密失败</p>
-<h2 id="文档转换优化"><a href="#文档转换优化" class="headerlink" title="文档转换优化"></a>文档转换优化</h2><p>大部分文档都能成功通过这个方式转换，但是有些就有问题了，要么只显示部分要么就全白了，然而用 flash 播放器打开却没有任何问题，很明显是 ffdec 的问题</p>
-<p>经过一段时间研究，发现是有些形状在 ffdec 中被错误解析，导致大片空白覆盖，删掉就恢复正常</p>
+<h2 id="文档转换优化"><a href="#文档转换优化" class="headerlink" title="文档转换优化"></a>文档转换优化</h2><p>大部分文档都能成功通过这个方式转换，但是有些就有问题了，要么只显示部分要么就全白了，然而用 flash 播放器打开却没有任何问题，很明显是 <code>ffdec</code> 的问题</p>
+<p>经过一段时间研究，发现是有些形状在 <code>ffdec</code> 中被错误解析，导致大片空白覆盖，删掉就恢复正常</p>
 <p>怎么自动化这个过程呢？什么？要我自动找出错误形状并自动删除？很可惜，这东西连AI都办不到</p>
 <p>那只好先放着，反正这种情况不太常见</p>
-<p>不过后来，我又发现 ffdec 里的高级设置中的 font-face 功能居然可以开启文本转换，转换出来的 SVG 文件直接可以复制文本，但是除了有文本，问题一大堆，错位、乱码、字体消失层出不穷，甚至 cairosvg 遇到这种文件直接开始报错，只能转极个别页面</p>
-<p>好了，知道是 ffdec 问题就该反馈给这个工具的原作者，结果作者在一天之内推了5个 commit，把我提到的 BUG 都修好了，我去这神仙效率：</p>
+<p>不过后来，我又发现 <code>ffdec</code> 里的高级设置中的 <code>font-face</code> 功能居然可以开启文本转换，转换出来的 SVG 文件直接可以复制文本，但是除了有文本，问题一大堆，错位、乱码、字体消失层出不穷，甚至 <code>cairosvg</code> 遇到这种文件直接开始报错，只能转极个别页面</p>
+<p>好了，知道是 <code>ffdec</code> 问题就该反馈给这个工具的原作者，结果作者在一天之内推了5个 commit，把我提到的 BUG 都修好了，我去这神仙效率：</p>
 <p><img src="https://edge.piglin.eu.org/seewo-school/uwixizikhhqpnhlwhuhounqkpvphihhh"></p>
 <p>（如果有条件的话可以去打赏这个作者，毕竟我的转换器功劳最大的就是这个工具了<del>，一年才被打赏几百美元也太可怜了</del>）</p>
 <p>看到这个的时候非常震惊，可是当时还在上信息课，没法更新我的工具，只能叹为观止</p>
 <p>现在放假回来马上更新了工具，本以为只给作者发了两个我认为典型的 swf 文件，可能不太适用于其他页面，出乎意料的是，除了转到 SVG 确实会出现如作者回复所说的间隔问题，其他 BUG 不再复现，更令人意外的是，直接转到 PDF 完全没问题了，找了十几个文档，全部正常转换，全部显示正常文本（但是用 Edge 预览时会出点渲染问题<del>，所以 Edge 就是个垃圾</del>），也能正常复制文本甚至是他们自己的文字识别贴上去的全透明文本也可以</p>
-<p>所以干掉了 cairosvg 转换方式，全面使用 ffdec（其实 cairosvg 方案还保留着，只是作为一个备选方案在配置文件里）</p>
+<p>所以干掉了 <code>cairosvg</code> 转换方式，全面使用 <code>ffdec</code><del>（其实 cairosvg 方案还保留着，只是作为一个备选方案在配置文件里）</del>更新：换为 Rust 编写的 <code>swf2svg</code> 工具实现 SVG -&gt; PDF 转换</p>
 <p>到目前为止，这个工具除了在速度上太慢了就已经超越了网上100%的提取工具</p>
 <h2 id="深入研究"><a href="#深入研究" class="headerlink" title="深入研究"></a>深入研究</h2><p>51 页后下载出的文件是损坏的，无法解压，那么问题就出现在下载程序，很容易就能想到这是给多页文档分层了，又发现我们把文件 id 的第一个数字设定成了 1，于是很容易想到这是每 50 页层数+1，再次抓包验证，看一下 51 页后的文件名，解码结果是：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2-0-453032-63-20110912-20110912175543_7SOoC87j</span><br><span class="line">2-453032-3261-63-20110912-20110912175543_7SOoC87j-51-69091550288</span><br></pre></td></tr></table></figure>
 <p>猜想没错，修改程序，恢复正常</p>
 <p>到这里就完了吗？</p>
 <p>再试试别的文档，又报错，原来有些文档并不完全是按照这个逻辑来分割的，有些上百页的文档却始终只有一个头文件，而且分割的页数也不定</p>
-<p>我们再次审视 pageInfo 的内容</p>
+<p>我们再仔细看一下 <code>pageInfo</code> 的内容</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">1-595-841-455235-3936</span><br><span class="line">1-595-841-459171-2914</span><br><span class="line">1-595-841-462085-2840</span><br><span class="line">1-595-841-464925-2929</span><br><span class="line">1-595-841-467854-4338</span><br><span class="line">...略</span><br><span class="line">1-595-841-633224-3945</span><br><span class="line">2-595-841-453032-3261</span><br><span class="line">2-595-841-456293-3496</span><br><span class="line">2-595-841-459789-4042</span><br><span class="line">2-595-841-463831-3738</span><br><span class="line">2-595-841-467569-3103</span><br><span class="line">2-595-841-470672-3965</span><br></pre></td></tr></table></figure>
 <p>发现第一个数字已经把层数已经定好了，根本不用去手动计算，直接根据这个数字找出对应的头文件就完事了<del>（然鹅就这我修了好几个版本才弄好</del></p>
-<p>再看看其他数字的意义，595-841 是固定的，在构造文件名时没用上，<del>我们就把它当成第二个文档 id 吧</del>（更新：EBT 解密工具的原作者 Jeangowhy 在他的<a target="_blank" rel="noopener" href="https://github.com/Jeangowhy/opendocs/blob/main/The_Essential_Guide_to_Creating_Multiplayer_Games_with_Godot_4.0.adoc">文档</a>中有注释过该部分的作用，其实就是文档的宽和高）</p>
+<p>再看看其他数字的意义，<code>595-841</code> 是固定的，在构造文件名时没用上，<del>我们就把它当成第二个文档 id 吧</del>（更新：EBT 解密工具的原作者 <code>Jeangowhy</code> 在他的<a target="_blank" rel="noopener" href="https://github.com/Jeangowhy/opendocs/blob/main/The_Essential_Guide_to_Creating_Multiplayer_Games_with_Godot_4.0.adoc">文档</a>中有注释过该部分的作用，其实就是文档的宽和高）</p>
 <p>再看后面两个数字，第一个数字总是上一页的第二个数字加上上一页的第一个数字，看起来有戏，那么最后一个数字有规律吗？喂给 AI，没有结果</p>
 <p>可能是文件大小？把下载的文件属性一看，好家伙，一模一样</p>
 <p>那第一页的倒数第二个数字是从哪来的？再看看对应的头文件，455235字节，完全一致</p>
@@ -514,12 +514,12 @@
 <p>文件 id 差不多弄清楚了，再来探索下有没有别的东西</p>
 <p>道客巴巴提供了一个任务池的东西，可以把提出任务让别人寻找这个文档，别人发的文件虽然可以预览，但是只有1页</p>
 <p>然后把预览网址贴到我的程序，兼容性很强，直接完美提取</p>
-<p>再来试试别的，诶好像不对，pageCount 的数字怎么和 pageInfo 的数量对不上，哦原来是对于分层文档，每个头文件的第一页都被解析了，通过这个这可以解析出那些原本看不到的文档了</p>
+<p>再来试试别的，诶好像不对，<code>pageCount</code> 的数字怎么和 <code>pageInfo</code> 的数量对不上，哦原来是对于分层文档，每个头文件的第一页都被解析了，通过这个这可以解析出那些原本看不到的文档了</p>
 <p>但是只能解析每层的第一页，那么如何强制解析额外页面呢？</p>
 <p>所以我试了下修改获取文件的长度，从 0 到 1024000，可以下载，但是内容包含多个连续文件（从0开始的PH到这层的最后一页或者达到长度要求）</p>
 <p>既然可以获取额外数据，那如何分离呢？</p>
-<p>zlib 压缩数据的文件头是固定的，所以只要得到第一个文件的文件头，就能通过查找文件头的方式分离</p>
-<p>但是没有这么简单，文件头数据只有两字节，极有可能找到错误位置，好在数据尾部有4字节的校验，可以直接用 zlib 做解压测试，只要解压成功就直接合成出页面</p>
+<p><code>zlib</code> 压缩数据的文件头是固定的，所以只要得到第一个文件的文件头，就能通过查找文件头的方式分离</p>
+<p>但是没有这么简单，文件头数据只有两字节，极有可能找到错误位置，好在数据尾部有4字节的校验，可以直接用 <code>zlib</code> 做解压测试，只要解压成功就直接合成出页面</p>
 <p>这样一来，只要能显示一页，整个文档就能提取出来</p>
 <p>差不多到此为止了</p>
 <h2 id="后续计划"><a href="#后续计划" class="headerlink" title="后续计划"></a>后续计划</h2><p><del>1. 提取那些没有被解析出来的额外页面</del>(已实现)<br>2. 完善缓存和配置文件<br>3. GUI</p>
@@ -614,7 +614,7 @@
       
       
       
-        2020-2025
+        2020-2026
       
       <span class="footer-info-sep rotate"></span>
       Cuite Piglin
@@ -628,7 +628,7 @@
     
       <div>
         <span class="icon-brush"></span>
-        5.7k
+        5.8k
         &nbsp;|&nbsp;
         <span class="icon-coffee"></span>
         00:20
@@ -827,7 +827,7 @@
           description: "",
           stripContent: "道客巴巴破解记录起因中考后想提取试卷，发现道客巴巴的资源较多，并且可以直接看文档，然而这个网站下载文档要付费，即使是预览文档也被特殊方式加密。 试着在网上查找相关工具，发现大多数都是提取图片，顶多利用稻壳阅读器解锁打印功能把文档提取下来，于是我开始自己研究 尝试提取文件首先肯定是抓包了，发现在滚动时会不断地出现这些文件，说明是我们要的文档数据文件： 看起来文件名像 base64 ，但解码不出来 文件内容好像也没有特征 再看看 js 文件，从中找出了生成链接的代码：  很明显链接的一部分经过了某种",
           date: "Thu Jul 10 2025 16:53:21 GMT+0800",
-          updated: "Sun Nov 16 2025 13:38:41 GMT+0800",
+          updated: "Sat Jan 03 2026 00:49:40 GMT+0800",
           cover: "/images/banner.webp",
         };
       </script>
