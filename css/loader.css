@@ -1,7 +1,7 @@
-[data-theme="dark"] #loader .loading-bg {
+[data-theme='dark'] #loader .loading-bg {
   background-color: rgba(37,37,37,0.9);
 }
-[data-theme="dark"] #loader .spinner-box .loading-word {
+[data-theme='dark'] #loader .spinner-box .loading-word {
   color: var(--red-1, #ff5252);
 }
 #loader .loading-bg {

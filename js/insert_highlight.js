@@ -79,18 +79,10 @@
   // 代码复制
   const clipboard = new ClipboardJS(".code-copy", {
     text: (trigger) => {
-      const selection = window.getSelection();
-      const range = document.createRange();
+      const codeElement =
+        trigger.parentNode.parentNode.parentNode.querySelector("td.code");
+      let selectedText = codeElement ? codeElement.innerText : "";
 
-      range.selectNodeContents(
-        trigger.parentNode.parentNode.nextElementSibling.querySelector(
-          "td.code"
-        )
-      );
-      selection.removeAllRanges();
-      selection.addRange(range);
-
-      let selectedText = selection.toString();
       if (
         tips.copyright?.enable &&
         selectedText.length >= tips.copyright?.count
@@ -109,7 +101,9 @@
       successText = successConfig;
     } else if (typeof successConfig === "object") {
       const lang = document.documentElement.lang;
-      const key = Object.keys(successConfig).find(key => key.toLowerCase() === lang.toLowerCase());
+      const key = Object.keys(successConfig).find(
+        (key) => key.toLowerCase() === lang.toLowerCase()
+      );
       if (key && successConfig[key]) {
         successText = successConfig[key];
       }
@@ -133,7 +127,9 @@
       failText = failConfig;
     } else if (typeof failConfig === "object") {
       const lang = document.documentElement.lang;
-      const key = Object.keys(failConfig).find(key => key.toLowerCase() === lang.toLowerCase());
+      const key = Object.keys(failConfig).find(
+        (key) => key.toLowerCase() === lang.toLowerCase()
+      );
       if (key && failConfig[key]) {
         failText = failConfig[key];
       }
