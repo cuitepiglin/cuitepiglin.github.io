@@ -7,7 +7,7 @@
   
   
   
-  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_4k4bc36ef96';window.REIMU_CONFIG.clipboard_tips = {"success":{"zh-CN,en":"Copy successfully (*^▽^*)"},"fail":{"zh-CN,en":"Copy failed (ﾟ⊿ﾟ)ﾂ"},"copyright":{"enable":false,"count":50,"license_type":"by-nc-sa"}};window.REIMU_CONFIG.clipboard_tips.copyright.content = '本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！';window.REIMU_CONFIG.code_block = {"expand":true};window.REIMU_CONFIG.base = 'https://blog.piglin.eu.org';</script>
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_4k4bc36ef96';window.REIMU_CONFIG.clipboard_tips = {"success":{"zh-CN":"复制成功 (*^▽^*)","en":"Copy successfully (*^▽^*)"},"fail":{"zh-CN":"复制失败 (ﾟ⊿ﾟ)ﾂ","en":"Copy failed (ﾟ⊿ﾟ)ﾂ"},"copyright":{"enable":false,"count":50,"license_type":"by-nc-sa"}};window.REIMU_CONFIG.clipboard_tips.copyright.content = '本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！';window.REIMU_CONFIG.code_block = {"expand":true};window.REIMU_CONFIG.base = 'https://blog.piglin.eu.org';window.REIMU_CONFIG.i18n_languages = ["en"];</script>
   <title>
     Archives | Cuite_Piglin&#39;s Blog | 可受的猪灵の博客
   </title>
@@ -99,25 +99,25 @@
       <div id="wrap">
         <div id="header-nav">
   <nav id="main-nav" aria-label="Primary navigation">
-        <a class="main-nav-link-wrap" href="/">
+        <a class="main-nav-link-wrap" href="/en/">
             <div class="main-nav-icon icon rotate">
                 &#xe62b;
             </div>
           <span class="main-nav-link">Home</span>
         </span>
-        <a class="main-nav-link-wrap" href="/archives">
+        <a class="main-nav-link-wrap" href="/en/archives">
             <div class="main-nav-icon icon rotate">
                 &#xe62b;
             </div>
           <span class="main-nav-link">Archives</span>
         </span>
-        <a class="main-nav-link-wrap" href="/about">
+        <a class="main-nav-link-wrap" href="/en/about">
             <div class="main-nav-icon icon rotate">
                 &#xe62b;
             </div>
           <span class="main-nav-link">About</span>
         </span>
-        <a class="main-nav-link-wrap" href="/friend">
+        <a class="main-nav-link-wrap" href="/en/friend">
             <div class="main-nav-icon icon rotate">
                 &#xe62b;
             </div>
@@ -128,6 +128,52 @@
   <nav id="sub-nav" aria-label="Secondary navigation">
       <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed" aria-label="RSS Feed" target="_blank"></a>
   </nav>
+    <nav id="i18n-nav" aria-label="Language selection">
+      <div class="custom-dropdown">
+        <div class="select-selected" id="select-selected" role="button" aria-haspopup="listbox" aria-expanded="false" aria-label="Language menu">
+          <span id="nav-language-btn" class="nav-icon" style="padding: 0 20px 0 0"></span>
+          <span id="selected-lang">English</span>
+        </div>
+        <ul class="select-items" id="select-items" role="listbox" aria-label="Languages">
+            <li data-value="zh-CN" role="option" aria-selected="false">简体中文</li>
+            <li data-value="en" role="option" class="selected" aria-selected="true">English</li>
+        </ul>
+      </div>
+      <script>
+        var selectSelected = document.getElementById("select-selected");
+        var selectedLang = document.getElementById("selected-lang");
+        var selectItems = document.getElementById("select-items");
+        var selectOptions = selectItems.querySelectorAll("li");
+
+        selectSelected.addEventListener("click", () => {
+          selectItems.classList.toggle("show");
+          var expanded = selectSelected.getAttribute("aria-expanded") === "true";
+          selectSelected.setAttribute("aria-expanded", (!expanded).toString());
+        });
+
+        selectOptions.forEach((item) => {
+          item.addEventListener("click", () => {
+            const langMap = {};
+              langMap['zh-CN'] = '/archives/';
+              langMap['en'] = '/en/archives/';
+            selectedLang.textContent = item.textContent;
+            selectItems.classList.remove("show");
+            selectOptions.forEach((option) => {
+              option.classList.remove("selected");
+            });
+            item.classList.add("selected");
+            window.location = langMap[item.dataset.value];
+          });
+        });
+
+        document.addEventListener("click", (event) => {
+          if (!event.target.closest(".custom-dropdown")) {
+            selectItems.classList.remove("show");
+            selectSelected.setAttribute("aria-expanded", "false");
+          }
+        });
+      </script>
+    </nav>
 </div>
 <header id="header" aria-label="Site header">
       <picture>
@@ -172,28 +218,28 @@
 </div>
 <div class="sidebar-menu">
       <div class="sidebar-menu-link-wrap">
-        <a class="sidebar-menu-link-dummy" href="/" aria-label="Home"></a>
+        <a class="sidebar-menu-link-dummy" href="/en/" aria-label="Home"></a>
           <div class="sidebar-menu-icon icon rotate">
               &#xe62b;
           </div>
         <div class="sidebar-menu-link">Home</div>
       </div>
       <div class="sidebar-menu-link-wrap">
-        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="Archives"></a>
+        <a class="sidebar-menu-link-dummy" href="/en/archives" aria-label="Archives"></a>
           <div class="sidebar-menu-icon icon rotate">
               &#xe62b;
           </div>
         <div class="sidebar-menu-link">Archives</div>
       </div>
       <div class="sidebar-menu-link-wrap">
-        <a class="sidebar-menu-link-dummy" href="/about" aria-label="About"></a>
+        <a class="sidebar-menu-link-dummy" href="/en/about" aria-label="About"></a>
           <div class="sidebar-menu-icon icon rotate">
               &#xe62b;
           </div>
         <div class="sidebar-menu-link">About</div>
       </div>
       <div class="sidebar-menu-link-wrap">
-        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="Friend"></a>
+        <a class="sidebar-menu-link-dummy" href="/en/friend" aria-label="Friend"></a>
           <div class="sidebar-menu-icon icon rotate">
               &#xe62b;
           </div>
@@ -215,7 +261,7 @@
 </div>
         <section class="archives-wrap" data-aos="fade-up">
           <div class="archive-year-wrap">
-            <a href="/archives/2025" class="archive-year">2025</a>
+            <a href="/en/archives/2025" class="archive-year">2025</a>
           </div>
           <ul>
             <li class="archive-article">
@@ -224,7 +270,7 @@
       <time class="dt-published" datetime="2025-08-05T20:02:24.000Z" itemprop="datePublished">08-06</time>
     </span>
   </div>
-    <a class="archive-article-title" href="/2025/08/06/eyes-qrcode/">人形扫码器 - 如何用肉眼读取一张二维码（高阶版）</a>
+    <a class="archive-article-title" href="/en/2025/08/06/eyes-qrcode/">人形扫码器 - 如何用肉眼读取一张二维码（高阶版）</a>
 </li>
 
             <li class="archive-article">
@@ -233,7 +279,7 @@
       <time class="dt-published" datetime="2025-07-11T15:38:05.000Z" itemprop="datePublished">07-11</time>
     </span>
   </div>
-    <a class="archive-article-title" href="/2025/07/11/seewo-cdn/">使用 Seewo 作为您的无限制图床</a>
+    <a class="archive-article-title" href="/en/2025/07/11/seewo-cdn/">使用 Seewo 作为您的无限制图床</a>
 </li>
 
             <li class="archive-article">
@@ -242,7 +288,7 @@
       <time class="dt-published" datetime="2025-07-10T08:53:21.000Z" itemprop="datePublished">07-10</time>
     </span>
   </div>
-    <a class="archive-article-title" href="/2025/07/10/%E9%81%93%E5%AE%A2%E5%B7%B4%E5%B7%B4%E7%A0%B4%E8%A7%A3%E8%AE%B0%E5%BD%95/">道客巴巴破解记录</a>
+    <a class="archive-article-title" href="/en/2025/07/10/%E9%81%93%E5%AE%A2%E5%B7%B4%E5%B7%B4%E7%A0%B4%E8%A7%A3%E8%AE%B0%E5%BD%95/">道客巴巴破解记录</a>
 </li>
 
           </ul>
@@ -314,28 +360,28 @@
 </div>
 <div class="sidebar-menu">
       <div class="sidebar-menu-link-wrap">
-        <a class="sidebar-menu-link-dummy" href="/" aria-label="Home"></a>
+        <a class="sidebar-menu-link-dummy" href="/en/" aria-label="Home"></a>
           <div class="sidebar-menu-icon icon rotate">
               &#xe62b;
           </div>
         <div class="sidebar-menu-link">Home</div>
       </div>
       <div class="sidebar-menu-link-wrap">
-        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="Archives"></a>
+        <a class="sidebar-menu-link-dummy" href="/en/archives" aria-label="Archives"></a>
           <div class="sidebar-menu-icon icon rotate">
               &#xe62b;
           </div>
         <div class="sidebar-menu-link">Archives</div>
       </div>
       <div class="sidebar-menu-link-wrap">
-        <a class="sidebar-menu-link-dummy" href="/about" aria-label="About"></a>
+        <a class="sidebar-menu-link-dummy" href="/en/about" aria-label="About"></a>
           <div class="sidebar-menu-icon icon rotate">
               &#xe62b;
           </div>
         <div class="sidebar-menu-link">About</div>
       </div>
       <div class="sidebar-menu-link-wrap">
-        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="Friend"></a>
+        <a class="sidebar-menu-link-dummy" href="/en/friend" aria-label="Friend"></a>
           <div class="sidebar-menu-icon icon rotate">
               &#xe62b;
           </div>
