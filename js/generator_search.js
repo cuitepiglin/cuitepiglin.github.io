@@ -9,7 +9,10 @@
     "beforeend",
     '<form id="search-form"><input type="text" id="search-text"></form>'
   );
-  fetch("/search.json")
+  const baseUrl = window.REIMU_CONFIG?.relative;
+  const searchUrl = baseUrl ? `${baseUrl}search.json`
+    : "/search.json";
+  fetch(searchUrl)
     .then((response) => {
       if (!response.ok) {
         throw new Error("Network response was not ok " + response.statusText);
@@ -24,6 +27,7 @@
           const inputText = _$("#search-text").value;
           searchResult.innerHTML = "";
           pagination.innerHTML = "";
+          currentPage = 1;
           if (inputText) {
             const hits = data.filter((post) => {
               return (
