@@ -1,0 +1,788 @@
+  <!DOCTYPE html>
+  <html lang="zh-CN"  
+      data-theme-mode="auto"
+  >
+  <head>
+  <meta charset="utf-8">
+  
+  
+  
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_a0oqhord1y';window.REIMU_CONFIG.clipboard_tips = {"success":{"zh-CN,en":"Copy successfully (*^▽^*)"},"fail":{"zh-CN,en":"Copy failed (ﾟ⊿ﾟ)ﾂ"},"copyright":{"enable":false,"count":50,"license_type":"by-nc-sa"}};window.REIMU_CONFIG.clipboard_tips.copyright.content = '本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！';window.REIMU_CONFIG.code_block = {"expand":true};window.REIMU_CONFIG.base = 'https://blog.piglin.eu.org';window.REIMU_CONFIG.relative = '/';</script>
+  <title>
+    Sunshine 与 RDP(Windows 远程桌面) 配合的多用户双开串流方案 | Cuite_Piglin&#39;s Blog | 可受的猪灵の博客
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic|Noto Serif SC:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic|Noto Serif SC:400,400italic,700,700italic&display=swap" media="print" onload="this.media='all'">
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_a0oqhord1y.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+    <meta name="description" content="Sunshine 与 RDP(Windows 远程桌面) 配合的多用户双开串流方案0. 摘要本方案使用 Sunshine 官方版以及 RDP(Windows 远程桌面) 实现了双开游戏互不影响，相当于电脑分身的效果。具体流程如下：    安装 Sunshine 并配置好相关配置 使用 RDPWrap 修改 RDP 服务以解除多用户连接限制 创建一个新用户以供 RDP 会话 在主用户下使用本地连接到">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sunshine 与 RDP(Windows 远程桌面) 配合的多用户双开串流方案">
+<meta property="og:url" content="https://blog.piglin.eu.org/2026/05/05/rdp-sunshine/index.html">
+<meta property="og:site_name" content="Cuite_Piglin&#39;s Blog | 可受的猪灵の博客">
+<meta property="og:description" content="Sunshine 与 RDP(Windows 远程桌面) 配合的多用户双开串流方案0. 摘要本方案使用 Sunshine 官方版以及 RDP(Windows 远程桌面) 实现了双开游戏互不影响，相当于电脑分身的效果。具体流程如下：    安装 Sunshine 并配置好相关配置 使用 RDPWrap 修改 RDP 服务以解除多用户连接限制 创建一个新用户以供 RDP 会话 在主用户下使用本地连接到">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-05-04T19:52:57.000Z">
+<meta property="article:modified_time" content="2026-05-04T20:05:04.566Z">
+<meta property="article:author" content="Cuite Piglin">
+<meta property="article:tag" content="Blog">
+<meta property="article:tag" content="博客">
+<meta property="article:tag" content="CuitePiglin">
+<meta property="article:tag" content="Cuite_Piglin">
+<meta property="article:tag" content="可受的猪灵">
+<meta property="article:tag" content="Cuite Piglin">
+<meta name="twitter:card" content="summary">
+      <meta name="keywords" content="远程桌面连接, Sunshine多用户, Sunshine双开, RDP多用户, 双开串流, RDPWrap, RDP解除帧率">
+    <link rel="alternate" href="/atom.xml" title="Cuite_Piglin's Blog | 可受的猪灵の博客" type="application/atom+xml">
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" integrity="sha384-IfxC36XL/toUyJ939C73PcgMuRzAZuIzZxE38drsmO5p6jD7ei+Zx/1oA/0l8ysE" crossorigin="anonymous">
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.2/dist/aos.css" integrity="sha384-GMRP93c6Hkz9JVKGAuRR3nTS7M07RwPgTFenXiosjq2VbVgvdDNcz1g6Mkj8AONa" crossorigin="anonymous">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+      <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi rotate">
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+      </div>
+      <div class="loading-word">少女祈祷中...</div>
+    </div>
+  </div>
+  <script>
+    var time = null;
+    var loaderEl = document.getElementById('loader');
+    var startLoading = () => {
+      time = Date.now();
+      loaderEl.classList.remove("loading");
+    }
+    var hideLoader = () => {
+      document.body.style.overflow = 'auto';
+      loader.classList.add('loading');
+    };
+
+    var endLoading = () => {
+      if (!time) {
+        hideLoader();
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          hideLoader();
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    loaderEl.addEventListener('click', endLoading);
+  </script>
+<div id="copy-tooltip"></div>
+<div id="heatmap-tooltip"></div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav" aria-label="Primary navigation">
+        <a class="main-nav-link-wrap" href="/">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">首页</span>
+        </a>
+        <a class="main-nav-link-wrap" href="/archives">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">归档</span>
+        </a>
+        <a class="main-nav-link-wrap" href="/about">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">关于</span>
+        </a>
+        <a class="main-nav-link-wrap" href="/friend">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">友链</span>
+        </a>
+    <a id="main-nav-toggle" class="nav-icon" aria-label="Toggle navigation" role="button"></a>
+  </nav>
+  <nav id="sub-nav" aria-label="Secondary navigation">
+      <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅" aria-label="RSS 订阅" target="_blank"></a>
+  </nav>
+</div>
+<header id="header" aria-label="Site header">
+        <picture>
+        </picture>
+          <img  fetchpriority="high" src="/images/banner.webp" alt="Sunshine 与 RDP(Windows 远程桌面) 配合的多用户双开串流方案">
+  <div id="header-outer">
+    <div id="header-title">
+          <span id="logo">
+            <h1 data-aos="slide-up">Sunshine 与 RDP(Windows 远程桌面) 配合的多用户双开串流方案</h1>
+          </span>
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+        </h2>
+    </div>
+  </div>
+</header>
+
+        <div id="content" aria-label="Page content"  class="sidebar-right" >
+          <aside id="sidebar" aria-label="Sidebar">
+  <div class="sidebar-wrapper-container sticky">
+  <div class="sidebar-wrapper">
+    <div class="sidebar-wrap" data-aos="fade-up">
+          <div class="sidebar-toc-sidebar"><h3 class="toc-title">文章目录</h3>
+<div class="sidebar-toc-wrapper toc-div-class" >
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Sunshine-%E4%B8%8E-RDP-Windows-%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2-%E9%85%8D%E5%90%88%E7%9A%84%E5%A4%9A%E7%94%A8%E6%88%B7%E5%8F%8C%E5%BC%80%E4%B8%B2%E6%B5%81%E6%96%B9%E6%A1%88"><span class="toc-number">1.</span> <span class="toc-text">Sunshine 与 RDP(Windows 远程桌面) 配合的多用户双开串流方案</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#0-%E6%91%98%E8%A6%81"><span class="toc-number">1.1.</span> <span class="toc-text">0. 摘要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E8%B5%84%E6%BA%90%E5%87%86%E5%A4%87"><span class="toc-number">1.2.</span> <span class="toc-text">1. 资源准备</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PC-%E6%89%80%E9%9C%80%E5%B7%A5%E5%85%B7-%E6%96%87%E4%BB%B6"><span class="toc-number">1.2.1.</span> <span class="toc-text">PC 所需工具&amp;文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%89%80%E9%9C%80-APP"><span class="toc-number">1.2.2.</span> <span class="toc-text">客户端所需 APP</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="toc-number">1.3.</span> <span class="toc-text">2. 环境准备</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%80%E5%90%AF%E8%BF%9C%E7%A8%8B-%E7%AD%96%E7%95%A5%E7%BB%84%E8%AE%BE%E7%BD%AE"><span class="toc-number">1.3.1.</span> <span class="toc-text">开启远程&amp;策略组设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-RDPWrap"><span class="toc-number">1.3.2.</span> <span class="toc-text">安装 RDPWrap</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E7%94%A8%E6%88%B7"><span class="toc-number">1.3.3.</span> <span class="toc-text">创建用户</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9-RDP-%E5%B8%A7%E7%8E%87"><span class="toc-number">1.3.4.</span> <span class="toc-text">修改 RDP 帧率</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%BC%80%E5%A7%8B%E8%BF%9E%E6%8E%A5"><span class="toc-number">1.4.</span> <span class="toc-text">3. 开始连接</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PC-%E7%AB%AF%E5%87%86%E5%A4%87"><span class="toc-number">1.4.1.</span> <span class="toc-text">PC 端准备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%BF%9E%E6%8E%A5"><span class="toc-number">1.4.2.</span> <span class="toc-text">客户端连接</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8E%E7%BB%AD"><span class="toc-number">1.4.3.</span> <span class="toc-text">后续</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%99%A4%E6%AD%A4%E4%B9%8B%E5%A4%96%E2%80%A6"><span class="toc-number">1.4.4.</span> <span class="toc-text">除此之外…</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E8%BF%9E%E6%8E%A5%E5%90%8E%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">1.5.</span> <span class="toc-text">4. 连接后注意事项</span></a></li></ol></li></ol>
+</div>
+</div>
+          <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="Cuite Piglin" class="lazyload">
+  <div class="sidebar-author-name">Cuite Piglin</div>
+  <div class="sidebar-description"></div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">4</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">0</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">0</div>
+  </div>
+</div>
+<div class="sidebar-social" >
+</div>
+<div class="sidebar-menu">
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+</div>
+</div>
+          <div class="sidebar-btn-wrapper" style="position:static">
+            <div class="sidebar-toc-btn current"></div>
+            <div class="sidebar-common-btn"></div>
+          </div>
+    </div>
+  </div>
+  <div class="sidebar-widget">
+  </div>
+  </div>
+</aside>
+
+          <section id="main" aria-label="Main content"><article id="post-rdp-sunshine" class="h-entry article" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <span class="article-date-link icon-calendar" data-aos="zoom-in">
+    <time datetime="2026-05-04T19:52:57.000Z" itemprop="datePublished">2026-05-05</time>
+    <time style="display: none;" id="post-update-time">2026-05-05</time>
+  </span>
+</div>
+
+    </div>
+    
+    <div class="hr-line"></div>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+        <h1 id="Sunshine-与-RDP-Windows-远程桌面-配合的多用户双开串流方案"><a href="#Sunshine-与-RDP-Windows-远程桌面-配合的多用户双开串流方案" class="headerlink" title="Sunshine 与 RDP(Windows 远程桌面) 配合的多用户双开串流方案"></a>Sunshine 与 RDP(Windows 远程桌面) 配合的多用户双开串流方案</h1><h2 id="0-摘要"><a href="#0-摘要" class="headerlink" title="0. 摘要"></a>0. 摘要</h2><p>本方案使用 Sunshine 官方版以及 RDP(Windows 远程桌面) 实现了双开游戏互不影响，相当于电脑分身的效果。<br>具体流程如下：  </p>
+<ol>
+<li>安装 Sunshine 并配置好相关配置</li>
+<li>使用 RDPWrap 修改 RDP 服务以解除多用户连接限制</li>
+<li>创建一个新用户以供 RDP 会话</li>
+<li>在主用户下使用本地连接到新用户，以创建一个远程桌面</li>
+<li>在新用户下打开 Sunshine，并使用相关客户端连接</li>
+<li>挂起 RDP 客户端进程，以减少性能占用</li>
+</ol>
+<h2 id="1-资源准备"><a href="#1-资源准备" class="headerlink" title="1. 资源准备"></a>1. 资源准备</h2><h3 id="PC-所需工具-文件"><a href="#PC-所需工具-文件" class="headerlink" title="PC 所需工具&amp;文件"></a>PC 所需工具&amp;文件</h3><ol>
+<li><a target="_blank" rel="noopener" href="https://github.com/LizardByte/Sunshine/releases">Sunshine</a> (Github)</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/stascorp/rdpwrap/releases/">RDPWrap</a> (Github)</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/sebaxakerhtc/rdpwrap.ini">rdpwrap.ini</a> (Github)</li>
+<li><a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/sysinternals/downloads/pssuspend">PsSuspend</a> (Microsoft)（可选）<blockquote>
+<p>Tip: Sunshine 不推荐基地版，因为基地版会不断尝试创建虚拟显示器</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="客户端所需-APP"><a href="#客户端所需-APP" class="headerlink" title="客户端所需 APP"></a>客户端所需 APP</h3><ol>
+<li>Moonlight 或其衍生出的改版（推荐阿西西：<a target="_blank" rel="noopener" href="https://github.com/Axixi2233/moonlight-android/releases">Android(Github)</a> &#x2F; <a target="_blank" rel="noopener" href="https://apps.apple.com/us/app/starlight-pc-streaming/id6761065654">iOS($2.99 App Store 美区)</a>）</li>
+<li>Windows（各大应用商店下载）</li>
+</ol>
+<h2 id="2-环境准备"><a href="#2-环境准备" class="headerlink" title="2. 环境准备"></a>2. 环境准备</h2><h3 id="开启远程-策略组设置"><a href="#开启远程-策略组设置" class="headerlink" title="开启远程&amp;策略组设置"></a>开启远程&amp;策略组设置</h3><p>参考 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/612260806">Windows 10&#x2F;11 多用户同时远程登陆 - 知乎</a> 进行修改</p>
+<blockquote>
+<p>Tip: 一般重启服务即生效，无需重启电脑，下文有说明</p>
+</blockquote>
+<h3 id="安装-RDPWrap"><a href="#安装-RDPWrap" class="headerlink" title="安装 RDPWrap"></a>安装 RDPWrap</h3><p>由于上文的参考链接已给出具体方法，这里就简要说明一下  </p>
+<ol>
+<li>下载 <a target="_blank" rel="noopener" href="https://github.com/stascorp/rdpwrap/releases/download/v1.6.2/RDPWrap-v1.6.2.zip">RDPWrap-v1.6.2.zip</a></li>
+<li>将其解压至一个文件夹，管理员运行 <code>install.bat</code></li>
+<li>下载最新版的 <a target="_blank" rel="noopener" href="https://github.com/sebaxakerhtc/rdpwrap.ini/raw/refs/heads/master/rdpwrap.ini">rdpwrap.ini</a>，用它替换掉 <code>C:\Program Files\RDP Wrapper\rdpwrap.ini</code></li>
+<li>右键 <code>Windows 徽标</code> 选择 <code>Windows PowerShell(管理员)</code> 依次运行：</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Stop-Service -Name termService -Force</span><br><span class="line">Start-Service -Name termService</span><br></pre></td></tr></table></figure>
+<p>这样就省去了重启步骤<br>运行 <code>RDPConf.exe</code>，若显示全部绿色，则配置成功，运行 <code>RDPCheck.exe</code> 并忽视安全警告，出现登录界面表明能够正常使用了</p>
+<blockquote>
+<p>Tip: 若出现 <code>Not Supported</code> 字样，可尝试去项目的 <a target="_blank" rel="noopener" href="https://github.com/sebaxakerhtc/rdpwrap.ini/issues">Issues</a> 中查找匹配你系统版本（运行 <code>winver</code> 可查看系统内部版本）的配置，并将其附加到上述 <code>rdpwrap.ini</code> 文件中。日后若因 Windows 更新而再次失效，可重复此操作。</p>
+</blockquote>
+<h3 id="创建用户"><a href="#创建用户" class="headerlink" title="创建用户"></a>创建用户</h3><ol>
+<li>Win + R 打开运行，输入 <code>lusrmgr.msc</code> 并回车</li>
+<li>进入用户列表，空白处右键-新用户，随便输入一个用户名，若不需要登录密码可以先取消下次更改密码，再勾选密码永不过期，创建</li>
+<li>双击刚刚创建好的用户，转到隶属于选项卡，点击添加-高级-立即查找-双击（电脑名）\Administrators-确定</li>
+<li>可以关闭创建用户的窗口了，然后在开始菜单中点击用户头像，选择刚刚创建的用户，进入等待用户初始化即可，然后再回到主用户<blockquote>
+<p>Tip: 首次进入会有用户体验计划，建议全部取消，并且自动全屏打开 <code>Edge</code>，可使用 <code>Alt + F4</code> 关闭</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="修改-RDP-帧率"><a href="#修改-RDP-帧率" class="headerlink" title="修改 RDP 帧率"></a>修改 RDP 帧率</h3><p>参考 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/troubleshoot/windows-server/remote/frame-rate-limited-to-30-fps">基于 Windows 的远程会话中的帧速率限制为 30 FPS - Microsoft Learn</a> 进行修改<br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/665123091">知乎</a>中有人提到，<code>DWMFRAMEINTERVAL</code>的值对应的帧率关系为：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">15</span> decimal = <span class="number">60</span> frames</span><br><span class="line"><span class="number">10</span> decimal = <span class="number">40</span> frames</span><br><span class="line"><span class="number">5</span> decimal = <span class="number">20</span> frames</span><br><span class="line"><span class="number">1</span> decimal = <span class="number">4</span> frames</span><br></pre></td></tr></table></figure>
+<p>然而，有人实测发现数值 8 对应 120 FPS 左右，该对照表在最新版本中已删去，也许是微软自己也不知道数值的对应关系，我的电脑实测发现 15 对应 45 FPS 左右，其余的大家可以自己去试</p>
+<h2 id="3-开始连接"><a href="#3-开始连接" class="headerlink" title="3. 开始连接"></a>3. 开始连接</h2><h3 id="PC-端准备"><a href="#PC-端准备" class="headerlink" title="PC 端准备"></a>PC 端准备</h3><ol>
+<li>检查后台是否有 Sunshine 或相关服务运行，若有则退出</li>
+<li>Win + R 或者终端运行 <code>mstsc /v:127.0.0.2</code> 即可创建本地远程桌面会话</li>
+<li>忽略安全警告，进入登录界面，点击创建好的用户，进入桌面</li>
+<li>在该用户下使用管理员权限打开 Sunshine，进入管理后台<blockquote>
+<p>Tip: 连接本地会话若出现 <code>无法连接到另一个控制台会话</code> 错误，可尝试将 <code>127.0.0.2</code> 最后一个数字改为更高的值(3-255)；若出现连接超时，则检查 IP 输入是否正确，若正确则尝试重启 RDP 服务（上文有提到），若还是不行请运行 <code>RDPWarp</code> 中的 <code>uninstall.bat</code> 进行卸载操作，再次重启服务，卸载后可以连接上了说明是配置文件有问题或者新系统不兼容，则请耐心等待<a target="_blank" rel="noopener" href="https://github.com/sebaxakerhtc/rdpwrap.ini/issues">社区</a>兼容</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="客户端连接"><a href="#客户端连接" class="headerlink" title="客户端连接"></a>客户端连接</h3><p>使用 Moonlight 连接到 PC，若是第一次连接，将会提示输入 PIN 码，在 PC 端后台 PIN 码输入页里输入即可（新版还要输设备名，若为空随便填即可）  </p>
+<blockquote>
+<p>Tip: 若遇到连接不上的情况，在排除网络和 IP（同一网络环境）问题后，可以尝试删除原先保持的电脑，再次添加新电脑</p>
+</blockquote>
+<h3 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h3><p>客户端连接上了就不要退出远程桌面了（也不要最小化），这样会使微软的远程虚拟显示器挂起，导致 Moonlight 断开连接<br>若觉得远程连接窗口太碍眼，可以把它拖至其他桌面，按 <code>Win + TAB</code> 进入多任务视图，创建一个桌面，把远程连接窗口拖进去，这样就可以在窗口活动的情况下隐藏掉了<br>若你还是觉得远程连接窗口在不断渲染占用性能，可以使用 <code>pssuspend64.exe</code> （存放在 <a target="_blank" rel="noopener" href="https://download.sysinternals.com/files/PSTools.zip">PsSuspend</a> 中）挂起进程，在程序目录下运行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.\pssuspend64.exe mstsc.exe</span><br></pre></td></tr></table></figure>
+<p>注：第一次运行会提示你同意条款，同意即可<br>之后要解除挂起的话，再运行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.\pssuspend64.exe -r mstsc.exe</span><br></pre></td></tr></table></figure>
+<p>这样远程桌面连接就不会占用性能了  </p>
+<h3 id="除此之外…"><a href="#除此之外…" class="headerlink" title="除此之外…"></a>除此之外…</h3><p>远程会话创建后不要断开连接后再次登录使用，尽量是第一次连接后再打开 <code>Sunshine</code>，因为实测发现 <code>Sunshine</code> 在 RDP 环境下仍存在问题，会导致在第二次或多次连接后无法正常获取显示器配置（能检测到 RDP 的虚拟显示器但无法正常使用）<br>若配置正确，第一次运行日志如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[2026-05-04 23:09:26.320]: Error: [code: 2, message: 系统找不到指定的文件。] &quot;RegQueryValueExW&quot; failed when getting size.</span><br><span class="line">此处省略 N 个相同报错</span><br><span class="line">[2026-05-04 23:09:26.333]: Error: [code: 2, message: 系统找不到指定的文件。] &quot;RegQueryValueExW&quot; failed when getting size.</span><br><span class="line">[2026-05-04 23:09:26.335]: Info: Currently available display devices:</span><br><span class="line">[</span><br><span class="line">  &#123;</span><br><span class="line">    &quot;device_id&quot;: &quot;&#123;f96a9834-1d18-5ee4-83e0-0964152a1577&#125;&quot;,</span><br><span class="line">    &quot;display_name&quot;: &quot;\\\\.\\DISPLAY1&quot;,</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>注意看到一个显示设备，显示设备名为 <code>DISPLAY1</code>，若是别的更高数值，则大概率你已经多次远程桌面断开重连了，以下为异常状态日志：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[2026-05-04 23:16:05.746]: Info: Will compute new display device topology from ...</span><br><span class="line">[2026-05-04 23:16:05.747]: Info: Newly computed display device topology data:</span><br><span class="line">...</span><br><span class="line">[2026-05-04 23:16:05.748]: Error: [code: 2, message: 系统找不到指定的文件。] &quot;RegQueryValueExW&quot; failed when getting size.</span><br><span class="line">[2026-05-04 23:16:05.750]: Info: Changing display modes to:</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line">[2026-05-04 23:16:05.761]: Error: [code: ERROR_GEN_FAILURE, message: 连到系统上的设备没有发挥作用。] failed to set display mode!</span><br><span class="line">[2026-05-04 23:16:05.761]: Error: Failed to apply new configuration, because new display modes could not be set!</span><br><span class="line">[2026-05-04 23:16:05.762]: Error: [code: 2, message: 系统找不到指定的文件。] &quot;RegQueryValueExW&quot; failed when getting size.</span><br><span class="line">...</span><br><span class="line">[2026-05-04 23:16:05.774]: Info: Encoder reenumeration is required</span><br><span class="line">[2026-05-04 23:16:05.774]: Info: // Testing for available encoders, this may generate errors. You can safely ignore those errors. //</span><br><span class="line">[2026-05-04 23:16:05.774]: Info: Trying encoder [nvenc]</span><br><span class="line">[2026-05-04 23:16:06.212]: Error: DuplicateOutput() test failed [0x8000FFFF]</span><br><span class="line">[2026-05-04 23:16:07.163]: Error: DuplicateOutput() test failed [0x8000FFFF]</span><br><span class="line">[2026-05-04 23:16:07.170]: Error: Failed to locate an output device</span><br><span class="line">相同报错 x3...</span><br><span class="line">[2026-05-04 23:16:11.740]: Info: Encoder [nvenc] failed</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>此后一段时间 <code>Sunshine</code> 会直接崩溃，并且重新运行后仍出现相同报错<br>解决办法很简单，注销，然后重新连接，再管理员运行 <code>Sunshine</code> 即可</p>
+<h2 id="4-连接后注意事项"><a href="#4-连接后注意事项" class="headerlink" title="4. 连接后注意事项"></a>4. 连接后注意事项</h2><p>由于在资源管理器中运行的 <code>Sunshine</code> 只有管理员权限，无法捕获到 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/security/application-security/application-control/user-account-control/how-it-works">UAC</a> 界面（仅 SYSTEM 特权可捕获画面），运行带管理员权限的应用就会黑屏卡死无法而继续操作，此时需要使用之前的远程桌面连接窗口（需解除挂起状态）进行手动确认，因此建议使用任务管理器（文件-运行新任务，勾选 <code>以系统管理权限创建此任务</code>）打开此类程序，防止因 UAC 界面卡死</p>
+
+    </div>
+    <footer class="article-footer">
+      
+      
+    </footer>
+  </div>
+    <nav id="article-nav" aria-label="Article navigation" data-aos="fade-up">
+    <div class="article-nav-link-wrap right">
+          <img data-src="/images/banner.webp" data-sizes="auto" alt="人形扫码器 - 如何用肉眼读取一张二维码（高阶版）" class="lazyload">
+      <a href="/2025/08/06/eyes-qrcode/" aria-label="后一篇: 人形扫码器 - 如何用肉眼读取一张二维码（高阶版）"  title="后一篇: 人形扫码器 - 如何用肉眼读取一张二维码（高阶版）"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+          人形扫码器 - 如何用肉眼读取一张二维码（高阶版）
+      </h3>
+    </div>
+  </nav>
+
+</article>
+
+  <section id="comments" data-aos="fade-up">
+    <div class="comment-header">
+        
+      <h2 class="comment-title">说些什么吧！</h2>
+      <div class="comment-selector">
+        <div class="comment-selector-wrap">
+            <div class="selector-item" data-selector="giscus">
+              <span>giscus</span>
+            </div>
+        </div>
+      </div>
+    </div>
+    <div class="comment-content">
+          <div class="comment giscus-comment" data-aos="fade-up"
+            id="giscus-comment">
+          </div>
+    </div>
+  </section>
+
+</section>
+        </div>
+        <footer id="footer" aria-label="Site footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    <div>
+      <span class="icon-copyright"></span>
+        2020-2026
+        <span class="footer-info-sep rotate"></span>
+      Cuite Piglin
+    </div>
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+      <div>
+        <span class="icon-brush"></span>
+        7.9k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        00:31
+      </div>
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+  </div>
+</footer>
+
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav" aria-label="Mobile navigation">
+  <div class="sidebar-wrap">
+        <div class="sidebar-toc-sidebar"><h3 class="toc-title">文章目录</h3>
+<div class="sidebar-toc-wrapper toc-div-class" >
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Sunshine-%E4%B8%8E-RDP-Windows-%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2-%E9%85%8D%E5%90%88%E7%9A%84%E5%A4%9A%E7%94%A8%E6%88%B7%E5%8F%8C%E5%BC%80%E4%B8%B2%E6%B5%81%E6%96%B9%E6%A1%88"><span class="toc-number">1.</span> <span class="toc-text">Sunshine 与 RDP(Windows 远程桌面) 配合的多用户双开串流方案</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#0-%E6%91%98%E8%A6%81"><span class="toc-number">1.1.</span> <span class="toc-text">0. 摘要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E8%B5%84%E6%BA%90%E5%87%86%E5%A4%87"><span class="toc-number">1.2.</span> <span class="toc-text">1. 资源准备</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PC-%E6%89%80%E9%9C%80%E5%B7%A5%E5%85%B7-%E6%96%87%E4%BB%B6"><span class="toc-number">1.2.1.</span> <span class="toc-text">PC 所需工具&amp;文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%89%80%E9%9C%80-APP"><span class="toc-number">1.2.2.</span> <span class="toc-text">客户端所需 APP</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="toc-number">1.3.</span> <span class="toc-text">2. 环境准备</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%80%E5%90%AF%E8%BF%9C%E7%A8%8B-%E7%AD%96%E7%95%A5%E7%BB%84%E8%AE%BE%E7%BD%AE"><span class="toc-number">1.3.1.</span> <span class="toc-text">开启远程&amp;策略组设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-RDPWrap"><span class="toc-number">1.3.2.</span> <span class="toc-text">安装 RDPWrap</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E7%94%A8%E6%88%B7"><span class="toc-number">1.3.3.</span> <span class="toc-text">创建用户</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9-RDP-%E5%B8%A7%E7%8E%87"><span class="toc-number">1.3.4.</span> <span class="toc-text">修改 RDP 帧率</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%BC%80%E5%A7%8B%E8%BF%9E%E6%8E%A5"><span class="toc-number">1.4.</span> <span class="toc-text">3. 开始连接</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PC-%E7%AB%AF%E5%87%86%E5%A4%87"><span class="toc-number">1.4.1.</span> <span class="toc-text">PC 端准备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%BF%9E%E6%8E%A5"><span class="toc-number">1.4.2.</span> <span class="toc-text">客户端连接</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8E%E7%BB%AD"><span class="toc-number">1.4.3.</span> <span class="toc-text">后续</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%99%A4%E6%AD%A4%E4%B9%8B%E5%A4%96%E2%80%A6"><span class="toc-number">1.4.4.</span> <span class="toc-text">除此之外…</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E8%BF%9E%E6%8E%A5%E5%90%8E%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">1.5.</span> <span class="toc-text">4. 连接后注意事项</span></a></li></ol></li></ol>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="Cuite Piglin" class="lazyload">
+  <div class="sidebar-author-name">Cuite Piglin</div>
+  <div class="sidebar-description"></div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">4</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">0</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">0</div>
+  </div>
+</div>
+<div class="sidebar-social" >
+</div>
+<div class="sidebar-menu">
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+</div>
+</div>
+  </div>
+      <div class="sidebar-btn-wrapper">
+        <div class="sidebar-toc-btn current"></div>
+        <div class="sidebar-common-btn"></div>
+      </div>
+</nav>
+
+    </div>
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+
+  <script>
+    var setupFirework = () => {
+      if (!false || !window.matchMedia('(max-width: 768px)').matches) {
+        window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["var(--red-1)","var(--red-2)","var(--red-3)","var(--red-4)"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["var(--red-0)"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'));
+      }
+    }
+  </script>
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.2.0/dist/index.umd.js" integrity="sha384-qi9WggRt19tv8Vc7pCHW3ulMNLwrn515zaLEWZjl1px07vz8+pUoWX8n1rgq282T" crossorigin="anonymous" onload="setupFirework()" defer></script>
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+      
+      
+      <script data-pjax>
+        window.REIMU_POST = {
+          author: "Cuite Piglin",
+          title: "Sunshine 与 RDP(Windows 远程桌面) 配合的多用户双开串流方案",
+          url: "https://blog.piglin.eu.org/2026/05/05/rdp-sunshine/",
+          excerpt: "",
+          description: "",
+          stripContent: "Sunshine 与 RDP(Windows 远程桌面) 配合的多用户双开串流方案0. 摘要本方案使用 Sunshine 官方版以及 RDP(Windows 远程桌面) 实现了双开游戏互不影响，相当于电脑分身的效果。具体流程如下：    安装 Sunshine 并配置好相关配置 使用 RDPWrap 修改 RDP 服务以解除多用户连接限制 创建一个新用户以供 RDP 会话 在主用户下使用本地连接到新用户，以创建一个远程桌面 在新用户下打开 Sunshine，并使用相关客户端连接 挂起 RDP 客",
+          date: "Tue May 05 2026 03:52:57 GMT+0800",
+          updated: "Tue May 05 2026 04:05:04 GMT+0800",
+          cover: "/images/banner.webp",
+        };
+      </script>
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+<script src="/js/tabs.js" data-pjax defer></script>
+
+      <script type="module" data-pjax>
+        (async () => {
+          const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+          const initPswp = (gallery, children) => {
+            if (_$$(`${gallery} ${children}`).length > 0) {
+              new PhotoSwipeLightbox({
+                gallery,
+                children,
+                pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+              }).init();
+            }
+          }
+          const pswp = () => {
+            initPswp('.article-entry', 'a.article-gallery-item');
+            initPswp('.article-gallery', 'a.article-gallery-item');
+          }
+          pswp();
+        })();
+      </script>
+        
+
+<script data-pjax>
+  var loadScript = (src, integrity) => {
+    const script = document.createElement('script');
+    script.src = src;
+    if (integrity) script.integrity = integrity;
+    script.crossOrigin = 'anonymous';
+    return script;
+  };
+
+  var commentConfigKeys = ["giscus"];
+  var commentConfig = {
+    giscus: {
+      enable: true,
+      load: async () => {
+        const container = document.querySelector('.giscus-comment');
+        if (!container) return;
+        container.style.display = 'block';
+
+        // 删除可能已存在的 giscus 脚本和 iframe
+        const existingScript = container.querySelector('script[src*="giscus.app/client.js"]');
+        if (existingScript) existingScript.remove();
+        const existingFrame = document.querySelector('iframe.giscus-frame');
+        if (existingFrame) existingFrame.remove();
+
+        const giscusScript = document.createElement('script');
+        const domMode = document.documentElement.getAttribute("data-theme");
+        const defaultTheme = { dark: 'dark', light: 'light' };
+        const customTheme = {
+          dark: '' ? '' : new URL('/css/giscus_reimu_dark.css', window.location.origin).href,
+          light:'' ? '' : new URL('/css/giscus_reimu_light.css', window.location.origin).href
+        }; 
+        const hasGiscusCorsHeader = async (url) => {
+          if (!url) return false;
+          if (!url.startsWith('http')) return true; // not a url, maybe a name of built-in theme
+          try {
+            let response = await fetch(url, { method: 'HEAD', cache: 'no-store' });
+            if (response.status === 405) {
+              response = await fetch(url, { method: 'GET', cache: 'no-store' });
+            }
+            const allowOrigin = response.headers.get('access-control-allow-origin') || '';
+            return allowOrigin === '*' || allowOrigin.split(',').map(value => value.trim()).includes('https://giscus.app');
+          } catch {
+            return false;
+          }
+        };
+        let giscusTheme = defaultTheme;
+        const [darkCorsOk, lightCorsOk] = await Promise.all([
+          hasGiscusCorsHeader(customTheme.dark),
+          hasGiscusCorsHeader(customTheme.light)
+        ]);
+        if (darkCorsOk && lightCorsOk) {
+          giscusTheme = customTheme;
+        }
+
+        const docLang = document.documentElement.lang || 'en';
+        const langBase = docLang.split('-')[0];
+        const supportedLangs = ['ar', 'be', 'bg', 'ca', 'cs', 'da', 'de', 'en', 
+        'eo', 'es', 'eu', 'fa', 'fr', 'gr', 'hbs', 'he', 'hu', 'id', 'it', 'ja', 
+        'kh', 'ko', 'nl', 'pl', 'pt', 'ro', 'ru', 'th', 'tr', 'uk', 'uz', 'vi', 'zh-CN', 'zh-HK', 'zh-TW'];
+        const giscusLang = supportedLangs.includes(docLang) ? docLang : supportedLangs.includes(langBase) ? langBase : 'en';
+
+        giscusScript.src = 'https://giscus.app/client.js';
+        giscusScript.setAttribute('data-repo', 'cuitepiglin/comment');
+        giscusScript.setAttribute('data-repo-id', 'R_kgDOPKvJaw');
+        giscusScript.setAttribute('data-category', 'General'); 
+        giscusScript.setAttribute('data-category-id', 'DIC_kwDOPKvJa84Cs0Aw');
+        giscusScript.setAttribute('data-mapping', '0');
+        giscusScript.setAttribute('data-strict', '0');
+        giscusScript.setAttribute('data-reactions-enabled', '1');
+        giscusScript.setAttribute('data-emit-metadata', '0');
+        giscusScript.setAttribute('data-input-position', 'bottom');
+        giscusScript.setAttribute('data-theme', domMode === 'dark' ? giscusTheme.dark : giscusTheme.light);
+        giscusScript.setAttribute('data-lang', giscusLang);
+        giscusScript.setAttribute('crossorigin', 'anonymous');
+        giscusScript.async = true;
+        container.appendChild(giscusScript);
+        const themeHandler = (e) => {
+          const isDark = e.detail.isDark;
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe || !iframe.contentWindow) {
+            document.body.removeEventListener('reimu:theme-set', themeHandler);
+            return;
+          }
+          iframe.contentWindow.postMessage({ giscus: { setConfig: { theme: isDark ? giscusTheme.dark : giscusTheme.light } } }, 'https://giscus.app');
+        };
+        document.body.addEventListener('reimu:theme-set', themeHandler);
+      }
+    },
+  }
+  commentConfig.enable = commentConfigKeys.some(key => commentConfig[key].enable);
+
+  var defaultComment = '';
+  if (commentConfig.enable) {
+    // 1. 首先检查localStorage中是否有保存的评论类型
+    var savedCommentType = localStorage.getItem('commentType');
+    
+    // 2. 如果localStorage中有值且对应的评论系统可用，就使用它
+    if (savedCommentType) {
+      if (commentConfig[savedCommentType]?.enable) {
+        defaultComment = savedCommentType;
+      }
+    }
+    
+    // 3. 如果localStorage无效，检查配置的默认评论系统
+    if (!defaultComment) {
+      var configDefault = 'waline';
+      if (commentConfig[configDefault]?.enable) {
+        defaultComment = configDefault;
+      }
+    }
+    
+    // 4. 如果前两项都无效，按指定顺序找到第一个可用的评论系统
+    if (!defaultComment) {
+      defaultComment = commentConfigKeys.find(sys => commentConfig[sys].enable) || '';
+    }
+  }
+  function loadComments() {
+    if (!commentConfig.enable) return;
+    const loadedComments = {
+      valine: false,
+      waline: false,
+      twikoo: false,
+      gitalk: false,
+      giscus: false,
+      utterances: false,
+      beaudar: false,
+      disqus: false,
+    };
+
+    // 隐藏所有评论容器
+    const hideAllComments = () => {
+      const commentContainers = document.querySelectorAll('.comment');
+      commentContainers.forEach(container => {
+        container.style.display = 'none';
+      });
+    };
+
+    // 按需加载评论系统
+    const loadCommentSystem = (type) => {
+      if (loadedComments[type]) {
+        // 如果已加载，只需显示对应容器
+        document.querySelector(`.${type}-comment`).style.display = 'block';
+        return;
+      }
+
+      // 根据类型加载对应的脚本
+      commentConfig[type]?.load();
+      loadedComments[type] = true;
+    };
+
+    // 评论组件选择器
+    const changeActiveCommentItems = (item) => {
+      const commentItems = document.querySelectorAll('.selector-item');
+      for (let i = 0; i < commentItems.length; i++) {
+        commentItems[i].classList.remove('active');
+      }
+      item.classList.add('active');
+
+      // 获取要加载的评论系统类型
+      const commentType = item.getAttribute('data-selector');
+
+      // 隐藏所有评论系统
+      hideAllComments();
+
+      // 加载选中的评论系统
+      loadCommentSystem(commentType);
+    };
+
+    const commentInit = () => {
+      // 评论组件选择器点击事件
+      const commentItems = document.querySelectorAll('.selector-item');
+      for (let item of commentItems) {
+        item.addEventListener('click', () => {
+          // 保存选择器状态
+          const commentType = item.getAttribute('data-selector');
+          window.localStorage.setItem('commentType', commentType);
+          // 切换选中状态
+          changeActiveCommentItems(item);
+        });
+      }
+
+      // 检查是否需要加载默认评论系统
+      if (defaultComment) {
+        const defaultSelectorItem = document.querySelector(`[data-selector="${defaultComment}"]`);
+        if (!defaultSelectorItem) return;
+        defaultSelectorItem.style.display = 'block';
+        defaultSelectorItem.classList.add('active');
+        loadCommentSystem(defaultComment);
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', commentInit);
+    } else {
+      commentInit();
+    }
+  };
+  loadComments();
+</script>
+
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.12.3' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+
+  </body>
+  </html>
