@@ -262,22 +262,24 @@
     <div class="post-info">
       <div class="post-meta">
         <span><span class="icon-calendar"></span>2026-05-05</span>
-        <span><span class="icon-pencil"></span>2.5k 字</span>
-        <span><span class="icon-clock"></span>10 分钟</span>
+        <span><span class="icon-pencil"></span>4.8k 字</span>
+        <span><span class="icon-clock"></span>18 分钟</span>
       </div>
       <h2 class="post-title">Sunshine 与 RDP(Windows 远程桌面) 配合的多用户多开串流方案</h2>
       <article class="post-article">
-          Sunshine 与 RDP(Windows 远程桌面) 配合的多用户双开串流方案0. 摘要本方案使用 Sunshine 官方版以及 RDP(Windows 远程桌面) 实现了多开游戏互不影响，相当于电脑分身的效果。具体流程如下：  
+          Sunshine 与 RDP（Windows 远程桌面）配合的多用户多开串流方案0. 摘要本方案使用 Sunshine 官方版以及 RDP（Windows 远程桌面）实现了多开游戏互不影响，相当于电脑分身的效果。
+具体流程如下：
 
-安装 Sunshine 并配置好相关配置
+安装并配置 Sunshine
 使用 RDPWrap 修改 RDP 服务以解除多用户连接限制
 创建一个新用户以供 RDP 会话
 在主用户下使用本地连接到新用户，以创建一个远程桌面
-在新用户下打开 Sunshine，并使用相关客户端连接
-挂起 RDP 客户端进程，以减少性能占用
+创建一个 Sunshine 副本，配置新端口
+在新用户下打开 Sunshine 副本，并使用相关客户端连接
+使用特制客户端保活 RDP 会话，降低性能占用，同时可自定义分辨率和缩放大小
 
-1. 资源准备PC 所需工具&amp;amp;文件
-Sunshine (Gith
+
+
       </article>
     </div>
   </div>
@@ -422,10 +424,10 @@ y % 3
       </div>
       <div>
         <span class="icon-brush"></span>
-        8.3k
+        10.6k
         &nbsp;|&nbsp;
         <span class="icon-coffee"></span>
-        00:32
+        00:40
       </div>
       <div>
         <span class="icon-eye"></span>
